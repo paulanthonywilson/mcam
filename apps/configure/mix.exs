@@ -25,8 +25,14 @@ defmodule Configure.MixProject do
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
+    [] ++ deps(Mix.target())
+  end
+
+  defp deps(:host), do: []
+
+  defp deps(_) do
     [
-      {:vintage_net_wizard, "~> 0.1"},
+      {:vintage_net_wizard, "~> 0.1"}
     ]
   end
 end

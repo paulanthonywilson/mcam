@@ -55,9 +55,8 @@ defmodule Fw.MixProject do
       {:nerves_system_osd32mp1, "~> 0.4", runtime: false, targets: :osd32mp1},
       {:nerves_system_x86_64, "~> 1.13", runtime: false, targets: :x86_64},
 
-      #Umbrella apps in this project
-      {:configure, in_umbrella: true},
-
+      # Umbrella apps in this project
+      {:configure, in_umbrella: true}
     ]
   end
 

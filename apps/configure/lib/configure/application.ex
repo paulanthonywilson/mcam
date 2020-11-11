@@ -1,20 +1,26 @@
 defmodule Configure.Application do
-  # See https://hexdocs.pm/elixir/Application.html
-  # for more information on OTP Applications
   @moduledoc false
 
   use Application
 
   @impl true
   def start(_type, _args) do
-    children = [
-      # Starts a worker by calling: Configure.Worker.start_link(arg)
-      # {Configure.Worker, arg}
-    ]
+    children = []
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
+    if should_start_wizard?() do
+      VintageNetWizard.run_wizard()
+    end
+
     opts = [strategy: :one_for_one, name: Configure.Supervisor]
     Supervisor.start_link(children, opts)
+  end
+
+  def should_start_wizard? do
+    with true <- function_exported?(VintageNet.Persistence, :call, 2),
+      {:error, _}  <-      VintageNet.Persistence.call(:load, ["wlan0"]) do
+        true
+      else
+        _ -> false
+    end
   end
 end
