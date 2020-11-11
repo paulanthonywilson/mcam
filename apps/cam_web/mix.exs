@@ -42,7 +42,6 @@ defmodule CamWeb.MixProject do
       {:floki, ">= 0.27.0", only: :test},
       {:phoenix_html, "~> 2.11"},
       {:phoenix_live_dashboard, "~> 0.3 or ~> 0.2.9"},
-      {:phoenix_pubsub, "~> 2.0"},
       {:telemetry_metrics, "~> 0.4"},
       {:telemetry_poller, "~> 0.4"},
       {:gettext, "~> 0.11"},
@@ -53,7 +52,8 @@ defmodule CamWeb.MixProject do
 
   def deps(:host) do
     [
-      {:phoenix_live_reload, "~> 1.2", only: :dev}
+      {:phoenix_live_reload, "~> 1.2", only: :dev},
+      {:configure, in_umbrella:  true}
     ]
   end
 

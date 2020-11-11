@@ -29,7 +29,7 @@ if Mix.env() == :test do
     server: false
 end
 
-if Mix.target() == :host do
+if Mix.target() == :host && Mix.env() == :dev do
   config :cam_web, CamWeb.Endpoint,
     debug_errors: true,
     code_reloader: true,
