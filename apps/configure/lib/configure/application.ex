@@ -5,7 +5,9 @@ defmodule Configure.Application do
 
   @impl true
   def start(_type, _args) do
-    children = []
+    children = [
+      Configure.GpioButtonWizardLaunch
+    ]
 
     if should_start_wizard?() do
       VintageNetWizard.run_wizard()
@@ -17,10 +19,10 @@ defmodule Configure.Application do
 
   def should_start_wizard? do
     with true <- function_exported?(VintageNet.Persistence, :call, 2),
-      {:error, _}  <-      VintageNet.Persistence.call(:load, ["wlan0"]) do
-        true
-      else
-        _ -> false
+         {:error, _} <- VintageNet.Persistence.call(:load, ["wlan0"]) do
+      true
+    else
+      _ -> false
     end
   end
 end
