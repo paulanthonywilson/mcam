@@ -3,6 +3,8 @@ defmodule Configure.Application do
 
   use Application
 
+  alias  Configure.WifiWizardInterface
+
   @impl true
   def start(_type, _args) do
     children = [
@@ -10,12 +12,13 @@ defmodule Configure.Application do
     ]
 
     if should_start_wizard?() do
-      VintageNetWizard.run_wizard()
+      WifiWizardInterface.start_wizard()
     end
 
     opts = [strategy: :one_for_one, name: Configure.Supervisor]
     Supervisor.start_link(children, opts)
   end
+
 
   def should_start_wizard? do
     with true <- function_exported?(VintageNet.Persistence, :call, 2),

@@ -9,6 +9,7 @@ defmodule Configure.GpioButtonWizardLaunch do
   use GenServer
   require Logger
   alias Circuits.GPIO
+  alias  Configure.WifiWizardInterface
 
   @name __MODULE__
   @button_down_time 5_000
@@ -37,7 +38,7 @@ defmodule Configure.GpioButtonWizardLaunch do
 
   def handle_info(:timeout, state) do
     Logger.info("Launching wizard")
-    :ok = VintageNetWizard.run_wizard()
+    :ok = WifiWizardInterface.start_wizard()
     {:noreply, state}
   end
 
