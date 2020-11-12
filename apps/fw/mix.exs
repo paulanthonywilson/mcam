@@ -57,7 +57,9 @@ defmodule Fw.MixProject do
 
       # Umbrella apps in this project
       {:cam_web, in_umbrella: true},
-      {:configure, in_umbrella: true}
+      {:camera, in_umbrella: true},
+      {:configure, in_umbrella: true},
+      {:image_server, in_umbrella: true}
     ]
   end
 

@@ -1,16 +1,17 @@
-defmodule Configure.MixProject do
+defmodule ImageServer.Mixfile do
   use Mix.Project
 
   def project do
     [
-      app: :configure,
+      app: :image_server,
       version: "0.1.0",
       build_path: "../../_build",
       config_path: "../../config/config.exs",
       deps_path: "../../deps",
       lockfile: "../../mix.lock",
-      elixir: "~> 1.11",
+      elixir: "~> 1.5",
       start_permanent: Mix.env() == :prod,
+      elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps()
     ]
   end
@@ -19,23 +20,20 @@ defmodule Configure.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      mod: {Configure.Application, []}
+      mod: {ImageServer.Application, []}
     ]
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:circuits_gpio, "~> 0.4.6"}
-    ] ++ deps(Mix.target())
-  end
-
-  defp deps(:host), do: []
-
-  defp deps(_) do
-    [
-      {:vintage_net_wizard, "~> 0.1"},
-      {:phoenix_pubsub, "~> 2.0"}
+      {:plug, ">= 0.0.0"},
+      {:cowboy, ">= 0.0.0"},
+      {:plug_cowboy, ">= 0.0.0"},
+      {:camera, in_umbrella: true}
     ]
   end
 end

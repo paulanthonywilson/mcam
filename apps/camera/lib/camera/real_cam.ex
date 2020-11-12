@@ -5,6 +5,14 @@ defmodule Camera.RealCam do
 
   @behaviour Camera.Cam
 
-  defdelegate start_link, to: Picam.Camera
+  @impl true
+  def child_spec(_) do
+    %{
+      id: Picam.Camera,
+      start: {Picam.Camera, :start_link, []}
+    }
+  end
+
+  @impl true
   defdelegate next_frame, to: Picam
 end

@@ -7,7 +7,7 @@ defmodule Camera.PicamSettings do
 
   @name __MODULE__
 
-  def start_link do
+  def start_link(_) do
     GenServer.start_link(__MODULE__, {}, name: @name)
   end
 
@@ -18,6 +18,7 @@ defmodule Camera.PicamSettings do
 
   def handle_info(:set, s) do
     Picam.set_size(644, 484)
+    Picam.set_rotation(90)
     {:noreply, s}
   end
 end

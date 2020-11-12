@@ -4,7 +4,7 @@ defmodule Camera.Cam do
   """
 
   @callback next_frame() :: [byte]
-  @callback start_link() :: {:ok, pid} | {:error, any}
+  @callback child_spec(any()) :: map()
 
   @spec impl() :: Cam
   def impl(), do: Application.get_env(:camera, __MODULE__)

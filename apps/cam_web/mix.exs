@@ -46,18 +46,22 @@ defmodule CamWeb.MixProject do
       {:telemetry_poller, "~> 0.4"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
-      {:plug_cowboy, "~> 2.0"}
+      {:plug_cowboy, "~> 2.0"},
+      {:configure, in_umbrella: true},
+      {:image_server, in_umbrella: true}
     ] ++ deps(Mix.target())
   end
 
   def deps(:host) do
     [
-      {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:configure, in_umbrella:  true}
+      {:phoenix_live_reload, "~> 1.2", only: :dev}
     ]
   end
 
-  def deps(_), do: []
+  def deps(_), do: [
+
+      {:nerves, "~> 1.7.0", runtime: false},
+  ]
 
   # Aliases are shortcuts or tasks specific to the current project.
   #
@@ -72,7 +76,13 @@ defmodule CamWeb.MixProject do
 
   defp aliases(_) do
     [
-      compile: ["compile", "phx.digest"]
+      compile: ["compile", &digest/1]
     ]
+  end
+
+  def digest(_args) do
+    # Get some very weird behaviour if we try to run this
+    # as a straight alias or even with Mix.Task.run/x
+    Mix.Shell.cmd("mix phx.digest", fn resp -> IO.puts(resp) end)
   end
 end
