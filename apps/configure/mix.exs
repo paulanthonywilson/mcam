@@ -26,7 +26,8 @@ defmodule Configure.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:circuits_gpio, "~> 0.4.6"}
+      {:circuits_gpio, "~> 0.4.6"},
+      {:phoenix_pubsub, "~> 2.0"}
     ] ++ deps(Mix.target())
   end
 

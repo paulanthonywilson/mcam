@@ -58,10 +58,7 @@ defmodule CamWeb.MixProject do
     ]
   end
 
-  def deps(_), do: [
-
-      {:nerves, "~> 1.7.0", runtime: false},
-  ]
+  def deps(_), do: [ ]
 
   # Aliases are shortcuts or tasks specific to the current project.
   #

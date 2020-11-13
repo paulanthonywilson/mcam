@@ -8,7 +8,8 @@ defmodule Configure.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      Configure.GpioButtonWizardLaunch
+      Configure.GpioButtonWizardLaunch,
+      {Phoenix.PubSub, name: Configure.Events.pubsub_name()}
     ]
 
     if should_start_home_hotspot?() do
