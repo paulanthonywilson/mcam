@@ -35,8 +35,7 @@ defmodule Fw.MixProject do
   defp deps do
     [
       # Dependencies for all targets
-      # {:nerves, "~> 1.7.0", runtime: false},
-      {:nerves, path: "~/dev/elixir-opensource/nerves", runtime: false, override: true},
+      {:nerves, "~> 1.7.0", runtime: false},
       {:shoehorn, "~> 0.7.0"},
       {:ring_logger, "~> 0.8.1"},
       {:toolshed, "~> 0.2.13"},
