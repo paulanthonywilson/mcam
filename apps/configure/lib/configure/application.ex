@@ -9,6 +9,7 @@ defmodule Configure.Application do
   def start(_type, _args) do
     children = [
       Configure.GpioButtonWizardLaunch,
+      {Configure.Persist, {filename(), Configure.Events.update_topic(), :configuration}},
       {Phoenix.PubSub, name: Configure.Events.pubsub_name()}
     ]
 
@@ -28,4 +29,14 @@ defmodule Configure.Application do
       _ -> false
     end
   end
+
+  @filename (case(Mix.target()) do
+               :host ->
+                 Path.join(System.tmp_dir(), "mcam_#{Mix.env()}_setting")
+
+               _ ->
+                 "/root/mcam_settings"
+             end)
+
+  defp filename, do: @filename
 end

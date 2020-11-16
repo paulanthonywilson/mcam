@@ -58,7 +58,7 @@ defmodule CamWeb.MixProject do
     ]
   end
 
-  def deps(_), do: [ ]
+  def deps(_), do: []
 
   # Aliases are shortcuts or tasks specific to the current project.
   #

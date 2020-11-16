@@ -23,3 +23,7 @@ config :image_server, :cowboy_options, port: if(Mix.env() == :test, do: 5000, el
 if File.exists?(Path.join(__DIR__, "config.secret.exs")) do
   import_config "config.secret.exs"
 end
+
+if Mix.env() == :test do
+  config :logger, :console, level: :warn
+end

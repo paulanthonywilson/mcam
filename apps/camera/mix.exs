@@ -26,7 +26,8 @@ defmodule Camera.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:picam, "~> 0.4.1"}
+      {:picam, "~> 0.4.1"},
+      {:configure, in_umbrella: true}
     ]
   end
 end

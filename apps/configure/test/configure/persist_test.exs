@@ -1,6 +1,8 @@
 defmodule Configure.PersistTest do
   use ExUnit.Case
 
+  import ExUnit.CaptureLog
+
   alias Configure.{Events, Persist}
 
   setup do
@@ -34,34 +36,29 @@ defmodule Configure.PersistTest do
     update_topic: update_topic,
     filename: filename
   } do
-    assert Persist.set(persist_pid, :camera_rotation, 180)
+    :ok = Persist.set(persist_pid, :camera_rotation, 180)
+    assert Persist.get(persist_pid, :camera_rotation) == 180
 
     {:ok, persist_pid} = Persist.start_link({filename, update_topic, nil})
     assert Persist.get(persist_pid, :camera_rotation) == 180
   end
 
-  # test "overrides ssid and secret", %{filename: filename} do
-  #   Settings.set(filename, {"bobby", "clitheroe"})
+  test "a corrrupt file reverts to default settings", %{
+    persist_pid: persist_pid,
+    update_topic: update_topic,
+    filename: filename
+  } do
+    :ok = Persist.set(persist_pid, :camera_rotation, 180)
+    assert Persist.get(persist_pid, :camera_rotation) == 180
 
-  #   assert Keyword.equal?(
-  #            [key_mgmt: :"WPA-PSK", psk: "clitheroe", ssid: "bobby"],
-  #            Settings.read_settings(filename)
-  #          )
-  # end
+    File.write!(filename, "Bobby bobber bob")
 
-  # @tag capture_log: true
-  # test "uses defaults if file has weird things in it", %{filename: filename} do
-  #   File.write(filename, :erlang.term_to_binary([1, 2, 3]))
+    log =
+      capture_log(fn ->
+        {:ok, persist_pid} = Persist.start_link({filename, update_topic, nil})
+        assert Persist.get(persist_pid, :camera_rotation) == 0
+      end)
 
-  #   assert [key_mgmt: :"WPA-PSK", psk: "secret", ssid: "myssid"] ==
-  #            Settings.read_settings(filename)
-  # end
-
-  # @tag capture_log: true
-  # test "uses defaults if file is corrupt", %{filename: filename} do
-  #   File.write(filename, "Liam Fox")
-
-  #   assert [key_mgmt: :"WPA-PSK", psk: "secret", ssid: "myssid"] ==
-  #            Settings.read_settings(filename)
-  # end
+    assert log =~ "Corrupt file"
+  end
 end

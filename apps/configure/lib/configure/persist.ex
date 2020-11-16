@@ -13,8 +13,14 @@ defmodule Configure.Persist do
   defstruct keys
 
   @default_settings %{
-    camera_rotation: 0
+    camera_awb_mode: :auto,
+    camera_rotation: 0,
+    camera_size: {644, 484},
+    camera_img_effect: :none,
+    email: nil
   }
+
+  @setting_keys Map.keys(@default_settings)
 
   @type t :: %__MODULE__{
           filename: String.t(),
@@ -40,6 +46,10 @@ defmodule Configure.Persist do
        update_topic: update_topic,
        settings: read_settings(filename)
      }}
+  end
+
+  def keys do
+    @setting_keys
   end
 
   def get(server, key) do
