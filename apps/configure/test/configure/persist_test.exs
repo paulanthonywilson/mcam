@@ -31,6 +31,10 @@ defmodule Configure.PersistTest do
     assert_receive {:updated_config, :camera_rotation, 90}
   end
 
+  test "all values", %{persist_pid: persist_pid} do
+    assert %{camera_rotation: 0, camera_img_effect: :none} = Persist.all_settings(persist_pid)
+  end
+
   test "setting a value is persisted", %{
     persist_pid: persist_pid,
     update_topic: update_topic,

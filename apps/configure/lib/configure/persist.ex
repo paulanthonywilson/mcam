@@ -1,6 +1,11 @@
 defmodule Configure.Persist do
   @moduledoc """
   Persist and broadcast changes to settings.
+
+  Implemented as a simple GenServer that reads and caches state. For the purposes of
+  this, it does not really matter that this is a bottleneck - highly concurrent access is not
+  needed in the same way as if this was on an internet server. The bottleneck (for setting values) at least
+  ensures that the file is only written to sequentially.
   """
   use GenServer
 
@@ -56,12 +61,20 @@ defmodule Configure.Persist do
     GenServer.call(server, {:get, key})
   end
 
+  def all_settings(server) do
+    GenServer.call(server, :all_settings)
+  end
+
   def set(server, key, value) do
     GenServer.cast(server, {:set, key, value})
   end
 
   def handle_call({:get, key}, _, %{settings: settings} = state) do
     {:reply, Map.get(settings, key), state}
+  end
+
+  def handle_call(:all_settings, _, %{settings: settings} = state) do
+    {:reply, settings, state}
   end
 
   def handle_cast(

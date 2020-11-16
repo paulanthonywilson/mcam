@@ -80,6 +80,6 @@ defmodule CamWeb.MixProject do
   def digest(_args) do
     # Get some very weird behaviour if we try to run this
     # as a straight alias or even with Mix.Task.run/x
-    Mix.Shell.cmd("mix phx.digest", fn resp -> IO.puts(resp) end)
+    Mix.Shell.cmd("MIX_TARGET=host mix phx.digest", fn resp -> IO.puts("digest: " <> resp) end)
   end
 end
