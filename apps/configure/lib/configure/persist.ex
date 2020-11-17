@@ -19,10 +19,12 @@ defmodule Configure.Persist do
 
   @default_settings %{
     camera_awb_mode: :auto,
+    camera_exposure_mode: :auto,
     camera_rotation: 0,
     camera_size: {644, 484},
     camera_img_effect: :none,
-    email: nil
+    email: nil,
+    registration_token: nil
   }
 
   @setting_keys Map.keys(@default_settings)

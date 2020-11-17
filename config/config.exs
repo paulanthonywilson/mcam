@@ -26,4 +26,5 @@ end
 
 if Mix.env() == :test do
   config :logger, :console, level: :warn
+  config :server_comms, :registration_jwk, "test-secret"
 end

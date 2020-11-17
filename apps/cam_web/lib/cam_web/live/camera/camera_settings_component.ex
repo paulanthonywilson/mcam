@@ -1,4 +1,7 @@
 defmodule CamWeb.CameraSettingsComponent do
+  @moduledoc """
+  Live view component for fiddling with the camera settings.
+  """
   use CamWeb, :live_component
 
   @rotation_options [0, 90, 180, 270]
@@ -23,6 +26,19 @@ defmodule CamWeb.CameraSettingsComponent do
     colorbalance
     cartoon)a)]
 
+  @exposure_modes [:auto | Enum.sort(~w(
+      night
+      backlight
+      spotlight
+      sports
+      snow
+      beach
+      verylong
+      fixedfps
+      antishake
+      fireworks
+    )a)]
+
   def render(assigns) do
     ~L"""
     <form phx-change="change-camera-rotation" phx-target="<%=@myself%>" class="camera-settings">
@@ -38,6 +54,13 @@ defmodule CamWeb.CameraSettingsComponent do
       <%= options_for_select(img_effect_options(), @camera_img_effect) %>
     </select>
     </form>
+
+    <form phx-change="change-exposure-mode" phx-target="<%=@myself%>" class="camera-settings">
+    <label for="camera-exposure-mode">Exposure mode</label>
+    <select name="camera-exposure-mode">
+      <%= options_for_select(exposure_modes(), @camera_exposure_mode) %>
+    </select>
+    </form>
     """
   end
 
@@ -51,6 +74,12 @@ defmodule CamWeb.CameraSettingsComponent do
     {:noreply, socket}
   end
 
+  def handle_event("change-exposure-mode", %{"camera-exposure-mode" => mode}, socket) do
+    Configure.set_camera_exposure_mode(String.to_existing_atom(mode))
+    {:noreply, socket}
+  end
+
   defp rotation_options, do: @rotation_options
   defp img_effect_options, do: @img_effect_options
+  defp exposure_modes, do: @exposure_modes
 end

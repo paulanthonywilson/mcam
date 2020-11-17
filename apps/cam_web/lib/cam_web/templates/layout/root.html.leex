@@ -10,17 +10,15 @@
     <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </head>
   <body>
-    <header>
+    <%= @inner_content %>
+    <footer>
       <section class="container">
         <nav role="navigation" class="navigation">
           <ul class="row">
-              <li class="column"><%= link "Camera", to:  Routes.camera_path(@conn, :index) %></li>
-              <li class="column"><%= link "Network", to: Routes.network_path(@conn, :index) %></li>
-              <li class="column"><%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home) %></li>
+              <li class="column"><%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home), target: "cam_live_dashboard" %></li>
           </ul>
         </nav>
       </section>
-    </header>
-    <%= @inner_content %>
+    </footer>
   </body>
 </html>

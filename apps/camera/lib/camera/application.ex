@@ -9,7 +9,7 @@ defmodule Camera.Application do
       Camera.PicamSettings
     ]
 
-    opts = [strategy: :one_for_one, name: Camera.Supervisor]
+    opts = [strategy: :one_for_all, name: Camera.Supervisor]
     Supervisor.start_link(children, opts)
   end
 end

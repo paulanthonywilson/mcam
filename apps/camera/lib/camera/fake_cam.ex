@@ -18,6 +18,7 @@ defmodule Camera.FakeCam do
   def init(_) do
     image_dir = Application.app_dir(:camera, "priv/fake_images")
     images = for f <- File.ls!(image_dir), do: File.read!(image_dir <> "/" <> f)
+    tick()
     {:ok, %__MODULE__{images: images, undisplayed_images: images}}
   end
 
@@ -32,24 +33,27 @@ defmodule Camera.FakeCam do
   end
 
   @impl true
-  def handle_call(:fake_image, from, s) do
-    Process.send_after(self(), {:fake_image, from}, 1_000)
-    {:noreply, s}
+  def handle_call(:fake_image, _from, %{undisplayed_images: [image | _]} = s) do
+    {:reply, image, s}
   end
 
   @impl true
-  def handle_info({:fake_image, from}, s = %{undisplayed_images: [image | []], images: images}) do
-    GenServer.reply(from, image)
+  def handle_info(:change_image, %{undisplayed_images: [_ | []], images: images} = s) do
+    tick()
     {:noreply, %{s | undisplayed_images: images}}
   end
 
-  def handle_info({:fake_image, from}, s = %{undisplayed_images: [image | rest]}) do
-    GenServer.reply(from, image)
+  def handle_info(:change_image, %{undisplayed_images: [_ | rest]} = s) do
+    tick()
     {:noreply, %{s | undisplayed_images: rest}}
   end
 
   @impl true
-  def handle_cast({:stack_next_image, image}, s = %{undisplayed_images: undisplayed_images}) do
+  def handle_cast({:stack_next_image, image}, %{undisplayed_images: undisplayed_images} = s) do
     {:noreply, %{s | undisplayed_images: [image | undisplayed_images]}}
+  end
+
+  defp tick() do
+    Process.send_after(self(), :change_image, 1250)
   end
 end

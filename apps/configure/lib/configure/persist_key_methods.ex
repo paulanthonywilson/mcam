@@ -1,4 +1,8 @@
 defmodule Configure.PersistKeyMethods do
+  @moduledoc """
+  Bit of macro automagic to create getter and setter functions for
+  the persist fields.
+  """
   alias Configure.Persist
 
   defmacro __using__(_) do

@@ -1,4 +1,8 @@
 defmodule CamWeb.NetworkLive do
+  @moduledoc """
+  Placeholder. May go away. Was thinking of on inlining the
+  [VintagenetWizard]
+  """
   use CamWeb, :live_view
 
   def render(assigns) do

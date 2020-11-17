@@ -4,7 +4,7 @@ defmodule ImageServer.ImagesToBrowserWebsocketHandler do
   """
   require Logger
 
-  def init(req = %{bindings: bindings}, _opts) do
+  def init(%{bindings: bindings} = req, _opts) do
     Logger.debug(fn -> "connected: #{inspect(bindings)}" end)
     {:cowboy_websocket, req, %{}}
   end

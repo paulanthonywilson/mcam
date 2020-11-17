@@ -21,6 +21,7 @@ defmodule Camera.PicamSettings do
     set(:camera_rotation, Configure.camera_rotation())
     set(:camera_awb_mode, Configure.camera_awb_mode())
     set(:camera_img_effect, Configure.camera_img_effect())
+    set(:camera_exposure_mode, Configure.camera_exposure_mode())
     {:noreply, s}
   end
 
@@ -33,5 +34,6 @@ defmodule Camera.PicamSettings do
   defp set(:camera_rotation, rotation), do: Picam.set_rotation(rotation)
   defp set(:camera_awb_mode, mode), do: Picam.set_awb_mode(mode)
   defp set(:camera_img_effect, effect), do: Picam.set_img_effect(effect)
+  defp set(:camera_exposure_mode, mode), do: Picam.set_exposure_mode(mode)
   defp set(_, _), do: :ok
 end

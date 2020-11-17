@@ -48,7 +48,9 @@ defmodule CamWeb.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:configure, in_umbrella: true},
-      {:image_server, in_umbrella: true}
+      {:image_server, in_umbrella: true},
+      {:server_comms, in_umbrella: true},
+      {:phoenix_ecto, "~> 4.2"}
     ] ++ deps(Mix.target())
   end
 

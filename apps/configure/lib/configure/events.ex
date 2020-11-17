@@ -13,7 +13,7 @@ defmodule Configure.Events do
   def update_topic, do: @update_topic
 
   @spec subscribe(String.t()) :: :ok | {:error, {:already_registered, pid}}
-  def subscribe(topic \\ update_topic) do
+  def subscribe(topic \\ @update_topic) do
     PubSub.subscribe(pubsub_name(), topic)
   end
 
