@@ -17,8 +17,8 @@ defmodule ServerComms.Api do
   a testing seam for `register/2`
   """
   @spec register(String.t(), String.t(), String.t()) :: :ok | {:error, term()}
-  def register(email, password, camera_id) do
-    request_json = Jason.encode!(%{email: email, password: password, camera_id: camera_id})
+  def register(email, password, board_id) do
+    request_json = Jason.encode!(%{email: email, password: password, board_id: board_id})
 
     case @request.post(register_url(), request_json, @json_headers, []) do
       {:ok, %{status_code: 200, body: token}} ->
@@ -37,8 +37,8 @@ defmodule ServerComms.Api do
   See `Configure.register/2`
   """
   def register(email, password) do
-    {:ok, camera_id} = BoardId.read_serial()
-    register(email, password, camera_id)
+    {:ok, board_id} = BoardId.read_serial()
+    register(email, password, board_id)
   end
 
   defp register_url do

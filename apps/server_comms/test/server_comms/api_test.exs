@@ -12,7 +12,7 @@ defmodule ServerComms.ApiTest do
         assert url =~ "api/register_camera"
 
         assert {:ok,
-                %{"email" => "bob@bob.com", "password" => "iambob", "camera_id" => "camera42"}} ==
+                %{"email" => "bob@bob.com", "password" => "iambob", "board_id" => "camera42"}} ==
                  Jason.decode(body)
 
         assert headers == [{"Accept", "application/json"}, {"Content-Type", "application/json"}]
