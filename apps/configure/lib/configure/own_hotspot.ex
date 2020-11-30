@@ -4,6 +4,8 @@ defmodule Configure.OwnHotspot do
   for the duration.
   """
   def start do
-    VintageNetWizard.run_wizard()
+    if function_exported?(VintageNetWizard, :run_wizard, 0) do
+      apply(VintageNetWizard, :run_wizard, [])
+    end
   end
 end

@@ -1,0 +1,6 @@
+<h1>Registered</h1>
+
+<p>You still need to confirm your email address. Please check your email and click on the link that we have just sent.
+
+<p>Click <%= link "here", to: Routes.user_confirmation_path(@conn, :new) %> to resend your confirmation email.</p>
+</p>
