@@ -16,6 +16,6 @@ defmodule McamServerWeb.CameraComponent do
   end
 
   defp receive_images_websocket_url do
-    "ws://localhost:4601/raw_ws/images_receive"
+    "ws://localhost:4500/raw_ws/images_receive"
   end
 end

@@ -1,3 +1,3 @@
 # Camera
 
-Interface to the Pi Camera
+Device interface to the Pi Camera

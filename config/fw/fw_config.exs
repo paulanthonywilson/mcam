@@ -19,7 +19,7 @@ camera =
 
 config :camera, Camera.Cam, camera
 
-config :image_server, :cowboy_options, port: if(Mix.env() == :test, do: 5000, else: 4500)
+config :direct_image_sender, :cowboy_options, port: if(Mix.env() == :test, do: 5000, else: 4500)
 
 # Secret stuff to avoid relying on all the `.env` things
 if File.exists?(Path.join(__DIR__, "config.secret.exs")) do

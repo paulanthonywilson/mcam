@@ -1,6 +1,5 @@
-defmodule ImageServer do
+defmodule DirectImageSender do
   @moduledoc false
-
   def receive_images_websocket_url do
     "ws://#{hostname()}.local:#{port()}/raw_ws/images_receive"
   end
@@ -11,7 +10,7 @@ defmodule ImageServer do
   end
 
   defp port do
-    :image_server
+    :direct_image_sender
     |> Application.fetch_env!(:cowboy_options)
     |> Keyword.fetch!(:port)
   end

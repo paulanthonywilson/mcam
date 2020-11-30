@@ -6,7 +6,7 @@ defmodule CamWeb.CameraLive do
   use CamWeb, :live_view
   alias CamWeb.{CameraSettingsComponent, RegistrationComponent}
 
-  import ImageServer, only: [receive_images_websocket_url: 0]
+  import DirectImageSender, only: [receive_images_websocket_url: 0]
 
   def mount(_params, _session, socket) do
     Configure.subscribe()

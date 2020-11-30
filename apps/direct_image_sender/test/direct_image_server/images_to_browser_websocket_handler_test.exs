@@ -1,7 +1,7 @@
-defmodule ImageServer.ImagesToBrowserWebsocketHandlerTest do
+defmodule DirectImageSender.ImagesToBrowserWebsocketHandlerTest do
   use ExUnit.Case
 
-  alias ImageServer.ImagesToBrowserWebsocketHandler
+  alias DirectImageSender.ImagesToBrowserWebsocketHandler
 
   test "sending an image" do
     assert {:reply, {:binary, <<0xFF, 0xD8>> <> _}, %{}} =

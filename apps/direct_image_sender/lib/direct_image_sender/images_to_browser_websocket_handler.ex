@@ -1,4 +1,4 @@
-defmodule ImageServer.ImagesToBrowserWebsocketHandler do
+defmodule DirectImageSender.ImagesToBrowserWebsocketHandler do
   @moduledoc """
   Listens for images being broadcast for a particular camera, and pushes down the websocket.
   """

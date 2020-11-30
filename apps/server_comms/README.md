@@ -1,6 +1,6 @@
 # Server Comms
 
-Communicates with the server. Includes
+Device side app that communicates with the server. Includes
 
 * sending images up
 * registration
