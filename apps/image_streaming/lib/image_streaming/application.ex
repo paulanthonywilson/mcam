@@ -8,13 +8,27 @@ defmodule ImageStreaming.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Starts a worker by calling: ImageStreaming.Worker.start_link(arg)
-      # {ImageStreaming.Worker, arg}
+      {Plug.Cowboy, scheme: :http, plug: nil, options: cowboy_options()}
     ]
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: ImageStreaming.Supervisor]
     Supervisor.start_link(children, opts)
+  end
+
+  defp dispatch_spec do
+    [
+      {:_,
+       [
+         {"/raw_ws/camera_interface/:token", ImageStreaming.CameraCommsWebsocket, %{}}
+         #  {"/raw_ws/browser_interface/:token", ImageStreaming.ImagesToBrowserWebsocketHandler, %{}}
+       ]}
+    ]
+  end
+
+  defp cowboy_options do
+    :image_streaming
+    |> Application.fetch_env!(:cowboy_options)
+    |> Keyword.put(:dispatch, dispatch_spec())
+    |> Keyword.put(:ref, __MODULE__)
   end
 end
