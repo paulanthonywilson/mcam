@@ -7,15 +7,14 @@ defmodule McamServerWeb.AllCamerasComponent do
     <ul class="camera-list">
     <%= for cam <- @all_cameras do %>
       <li>
-      <% if @cam == @camera do %>
+      <%= if cam == @camera do %>
         <%= cam.board_id %>
       <% else %>
-        <%= live_redirect cam.board_id, to: Routes.camera_path(:show, cam.id) %>
+        <%= live_redirect cam.board_id, to: Routes.camera_path(@socket, :show, cam.id) %>
       <% end %>
       </li>
     <% end %>
     </ul>
     """
   end
-
 end

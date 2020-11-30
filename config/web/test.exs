@@ -21,7 +21,5 @@ config :mcam_server_web, McamServerWeb.Endpoint,
   http: [port: 4002],
   server: false
 
-config :image_server, :cowboy_options, port: 4602
-
 # Print only warnings and errors during test
 config :logger, level: :warn

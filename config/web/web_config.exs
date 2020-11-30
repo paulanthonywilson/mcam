@@ -38,8 +38,6 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-config :image_server, :cowboy_options, port: 4601
-
 import_config "mailing.exs"
 
 # Import environment specific config. This must remain at the bottom

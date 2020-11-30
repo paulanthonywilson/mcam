@@ -36,7 +36,7 @@ defmodule Configure.MixProject do
 
   defp deps(_) do
     [
-      {:vintage_net_wizard, "~> 0.4.0"},
+      {:vintage_net_wizard, "~> 0.4.0"}
     ]
   end
 end
