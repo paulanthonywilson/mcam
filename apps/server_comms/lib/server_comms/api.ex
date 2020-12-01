@@ -20,13 +20,14 @@ defmodule ServerComms.Api do
   def register(email, password, board_id) do
     request_json = Jason.encode!(%{email: email, password: password, board_id: board_id})
 
-    case @request.post(register_url(), request_json, @json_headers, []) do
-      {:ok, %{status_code: 200, body: token}} ->
-        Configure.set_email(email)
-        Configure.set_registration_token(token)
-        Logger.info(fn -> "Registered to #{email}" end)
-        :ok
-
+    with {:ok, %{status_code: 200, body: body}} <-
+           @request.post(register_url(), request_json, @json_headers, []),
+         {:ok, token} <- Jason.decode(body) do
+      Configure.set_email(email)
+      Configure.set_registration_token(token)
+      Logger.info(fn -> "Registered to #{email}" end)
+      :ok
+    else
       err ->
         Logger.info(fn -> "Failed registration: #{inspect(err)}" end)
         {:error, "registration failed"}

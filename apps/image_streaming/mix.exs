@@ -27,7 +27,6 @@ defmodule ImageStreaming.MixProject do
       {:plug, ">= 0.0.0"},
       {:cowboy, ">= 0.0.0"},
       {:plug_cowboy, ">= 0.0.0"},
-      {:websocket_client, git: "git@github.com:jeremyong/websocket_client.git"},
       {:mcam_server, in_umbrella: true},
       {:monitoring, in_umbrella: true}
     ]

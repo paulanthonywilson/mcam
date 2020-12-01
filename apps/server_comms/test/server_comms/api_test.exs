@@ -28,7 +28,7 @@ defmodule ServerComms.ApiTest do
 
       MockRequest
       |> expect(:post, 1, fn _url, _body, _headers, _opts ->
-        {:ok, %HTTPoison.Response{status_code: 200, body: "token12345"}}
+        {:ok, %HTTPoison.Response{status_code: 200, body: Jason.encode!("token12345")}}
       end)
 
       assert :ok == Api.register("bobsuccess@bob.com", "iambob", "camera42")
