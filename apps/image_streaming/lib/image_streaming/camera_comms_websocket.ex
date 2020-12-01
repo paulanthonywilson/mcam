@@ -38,21 +38,15 @@ defmodule ImageStreaming.CameraCommsWebsocket do
   end
 
   def terminate(_reason, _req, %{camera_id: camera_id}) do
+    Logger.debug(fn -> "Camera disconnected: #{camera_id}" end)
     Monitoring.camera_disconnected(camera_id)
     :ok
   end
 
   def terminate(_reason, _req, _state) do
-    IO.inspect(self(), label: :terminate)
-    Logger.warn(fn -> "Disconnection with camera id" end)
+    Logger.warn(fn -> "Disconnection without camera id" end)
     :ok
   end
-
-  # def websocket_handle({:binary, term = <<131::8, _::binary>>}, state = %{camera_id: camera_id}) do
-  #   message = :erlang.binary_to_term(term, [:safe])
-  #   Monitoring.stats_received(camera_id, message)
-  #   {:ok, state}
-  # end
 
   def websocket_handle({:binary, image}, state = %{camera_id: camera_id}) do
     Monitoring.image_received(camera_id)

@@ -47,7 +47,8 @@ defmodule ServerComms.Ws.WebsocketConnector do
   end
 
   def handle_info(:websocket_terminated, state) do
-    start_connecting(@connection_delay, state)
+    # Ok, let's just start again
+    {:stop, :normal, state}
   end
 
   def handle_info(:attempt_connection, state), do: {:noreply, state}

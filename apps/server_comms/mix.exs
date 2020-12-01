@@ -29,6 +29,7 @@ defmodule ServerComms.MixProject do
     [
       {:httpoison, "~> 1.7"},
       {:configure, in_umbrella: true},
+      {:camera, in_umbrella: true},
       {:jason, "~> 1.2"},
       {:websocket_client, path: "~/dev/elixir-opensource/websocket_client"},
       {:mox, "~> 1.0", only: :test}

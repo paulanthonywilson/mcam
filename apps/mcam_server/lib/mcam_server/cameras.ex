@@ -63,8 +63,7 @@ defmodule McamServer.Cameras do
     Plug.Crypto.encrypt(token_config(:secret), token_config(:salt), camera_id)
   end
 
-  @spec from_token(Strint.t()) ::
-          {:ok, Camera.t()} | {:error, :expired | :invalid | :missing | :not_found}
+  @spec from_token(String.t()) :: {:ok, Camera.t()} | {:error, :expired | :invalid | :missing | :not_found}
   def from_token(token) do
     with {:ok, id} <-
            Plug.Crypto.decrypt(token_config(:secret), token_config(:salt), token,
