@@ -5,6 +5,7 @@ defmodule ConfigureTest do
     assert {644, 484} = Configure.camera_size()
 
     Configure.set_camera_rotation(90)
-    assert 90 == Configure.camera_rotation()
+
+    assert_receive {:fake_setting_set, :camera_rotation, 90}
   end
 end

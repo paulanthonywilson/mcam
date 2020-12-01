@@ -33,8 +33,8 @@ defmodule ServerComms.ApiTest do
 
       assert :ok == Api.register("bobsuccess@bob.com", "iambob", "camera42")
 
-      assert_receive {:updated_config, :email, "bobsuccess@bob.com"}
-      assert_receive {:updated_config, :registration_token, "token12345"}
+      assert_receive {:fake_setting_set, :email, "bobsuccess@bob.com"}
+      assert_receive {:fake_setting_set, :registration_token, "token12345"}
     end
 
     test "no changes made on registration failure" do
@@ -46,7 +46,7 @@ defmodule ServerComms.ApiTest do
       end)
 
       assert {:error, _} = Api.register("bobfailure@bob.com", "iambob", "camera42")
-      refute_receive {:updated_config, :email, "bobsuccess@bob.com"}
+      refute_receive {:fake_setting_set, :email, "bobsuccess@bob.com"}
     end
   end
 end

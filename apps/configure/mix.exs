@@ -10,6 +10,7 @@ defmodule Configure.MixProject do
       deps_path: "../../deps",
       lockfile: "../../mix.lock",
       elixir: "~> 1.11",
+      elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
@@ -27,7 +28,6 @@ defmodule Configure.MixProject do
   defp deps do
     [
       {:circuits_gpio, "~> 0.4.6"},
-      {:phoenix_pubsub, "~> 2.0"},
       {:phoenix_pubsub, "~> 2.0"}
     ] ++ deps(Mix.target())
   end
@@ -39,4 +39,7 @@ defmodule Configure.MixProject do
       {:vintage_net_wizard, "~> 0.4.0"}
     ]
   end
+
+  defp elixirc_paths(:test), do: ["test/support", "lib"]
+  defp elixirc_paths(_), do: ["lib"]
 end

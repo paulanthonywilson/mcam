@@ -8,26 +8,15 @@ defmodule Configure.Persist do
   ensures that the file is only written to sequentially.
   """
   use GenServer
+  @behaviour Configure.Settings
 
-  alias Configure.Events
+  alias Configure.{Events, Settings}
 
   require Logger
 
   keys = [:filename, :update_topic, :settings]
   @enforce_keys keys
   defstruct keys
-
-  @default_settings %{
-    camera_awb_mode: :auto,
-    camera_exposure_mode: :auto,
-    camera_rotation: 0,
-    camera_size: {644, 484},
-    camera_img_effect: :none,
-    email: nil,
-    registration_token: nil
-  }
-
-  @setting_keys Map.keys(@default_settings)
 
   @type t :: %__MODULE__{
           filename: String.t(),
@@ -53,10 +42,6 @@ defmodule Configure.Persist do
        update_topic: update_topic,
        settings: read_settings(filename)
      }}
-  end
-
-  def keys do
-    @setting_keys
   end
 
   def get(server, key) do
@@ -105,7 +90,7 @@ defmodule Configure.Persist do
   end
 
   defp default_settings do
-    @default_settings
+    Settings.default_settings()
   end
 
   defp decode_file_contents(binary) do

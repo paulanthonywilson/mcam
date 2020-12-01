@@ -3,18 +3,24 @@ defmodule Configure.PersistKeyMethods do
   Bit of macro automagic to create getter and setter functions for
   the persist fields.
   """
-  alias Configure.Persist
+  alias Configure.Settings
 
   defmacro __using__(_) do
+    settings_holder =
+      case Mix.env() do
+        :test -> Configure.FakeSettings
+        _ -> Configure.Persist
+      end
+
     kvp =
-      for key <- Persist.keys() do
+      for key <- Settings.keys() do
         quote do
           def unquote(key)() do
-            Configure.Persist.get(:configuration, unquote(key))
+            unquote(settings_holder).get(:configuration, unquote(key))
           end
 
           def unquote(:"set_#{key}")(value) do
-            Configure.Persist.set(:configuration, unquote(key), value)
+            unquote(settings_holder).set(:configuration, unquote(key), value)
           end
         end
       end
@@ -22,7 +28,7 @@ defmodule Configure.PersistKeyMethods do
     [
       quote do
         def all_settings do
-          Configure.Persist.all_settings(:configuration)
+          unquote(settings_holder).all_settings(:configuration)
         end
       end
       | kvp
