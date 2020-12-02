@@ -121,4 +121,5 @@ defmodule McamServer.Cameras do
   end
 
   defp token_env(:camera), do: Application.fetch_env!(:mcam_server, :camera_token)
+  defp token_env(:browser), do: Application.fetch_env!(:mcam_server, :browser_token)
 end
