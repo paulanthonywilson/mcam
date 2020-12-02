@@ -12,6 +12,10 @@ defmodule McamServer.Cameras do
   @four_weeks 60 * 60 * 24 * 7 * 4
   @pubsub McamServer.PubSub
 
+  @type token_target :: :camera | :browser
+
+  defguard valid_token_target(destination) when destination in [:camera, :browser]
+
   @doc """
   Registers a camera to a a user
   """
@@ -54,19 +58,27 @@ defmodule McamServer.Cameras do
 
   defp maybe_broadcast_registration(res), do: res
 
-  @spec token_for(Camera.t() | integer()) :: String.t()
-  def token_for(%Camera{id: id}) do
-    token_for(id)
+  @spec token_for(Camera.t() | integer(), token_target()) :: String.t()
+  def token_for(%Camera{id: id}, token_target) do
+    token_for(id, token_target)
   end
 
-  def token_for(camera_id) do
-    Plug.Crypto.encrypt(token_config(:secret), token_config(:salt), camera_id)
+  def token_for(camera_id, token_target) when valid_token_target(token_target) do
+    Plug.Crypto.encrypt(
+      token_config(token_target, :secret),
+      token_config(token_target, :salt),
+      camera_id
+    )
   end
 
-  @spec from_token(String.t()) :: {:ok, Camera.t()} | {:error, :expired | :invalid | :missing | :not_found}
-  def from_token(token) do
+  @spec from_token(String.t(), token_target()) ::
+          {:ok, Camera.t()} | {:error, :expired | :invalid | :missing | :not_found}
+  def from_token(token, token_target) when valid_token_target(token_target) do
     with {:ok, id} <-
-           Plug.Crypto.decrypt(token_config(:secret), token_config(:salt), token,
+           Plug.Crypto.decrypt(
+             token_config(token_target, :secret),
+             token_config(token_target, :salt),
+             token,
              max_age: @four_weeks
            ),
          {_, camera} when not is_nil(camera) <- {:camera, Repo.get(Camera, id)} do
@@ -102,9 +114,11 @@ defmodule McamServer.Cameras do
   defp camera_topic(camera_id), do: "camera:#{camera_id}"
   defp registration_topic, do: "camera_registrations"
 
-  defp token_config(key) do
-    :mcam_server
-    |> Application.fetch_env!(:camera_token)
+  defp token_config(token_target, key) do
+    token_target
+    |> token_env()
     |> Keyword.fetch!(key)
   end
+
+  defp token_env(:camera), do: Application.fetch_env!(:mcam_server, :camera_token)
 end

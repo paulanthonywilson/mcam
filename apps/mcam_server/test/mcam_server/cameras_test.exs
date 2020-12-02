@@ -59,30 +59,30 @@ defmodule McamServer.CamerasTest do
     test "can generate and retrieve camera from token", %{user: %{id: user_id}} do
       {:ok, %{id: camera_id} = camera} = Cameras.register("bob@bob.com", "hellomateyboy", "bb8")
 
-      token = Cameras.token_for(camera)
+      token = Cameras.token_for(camera, :camera)
 
       assert is_binary(token)
 
       assert {:ok, %Camera{id: ^camera_id, owner_id: ^user_id, board_id: "bb8"}} =
-               Cameras.from_token(token)
+               Cameras.from_token(token, :camera)
     end
 
     test "tokenising with only the camera id", %{user: %{id: user_id}} do
       {:ok, %{id: camera_id}} = Cameras.register("bob@bob.com", "hellomateyboy", "bb8")
 
-      token = Cameras.token_for(camera_id)
+      token = Cameras.token_for(camera_id, :camera)
 
       assert {:ok, %Camera{id: ^camera_id, owner_id: ^user_id, board_id: "bb8"}} =
-               Cameras.from_token(token)
+               Cameras.from_token(token, :camera)
     end
 
     test "invalid token" do
-      assert {:error, :invalid} == Cameras.from_token("hello sailor")
+      assert {:error, :invalid} == Cameras.from_token("hello sailor", :camera)
     end
 
     test "no such camera" do
-      token = Cameras.token_for(%Camera{id: -999})
-      assert {:error, :not_found} == Cameras.from_token(token)
+      token = Cameras.token_for(%Camera{id: -999}, :camera)
+      assert {:error, :not_found} == Cameras.from_token(token, :camera)
     end
   end
 

@@ -17,7 +17,7 @@ defmodule ImageStreaming.CameraCommsWebsocketTest do
 
       req =
         camera
-        |> Cameras.token_for()
+        |> Cameras.token_for(:camera)
         |> req()
 
       assert {:cowboy_websocket, ^req, %{camera_id: ^camera_id}} =
@@ -43,7 +43,7 @@ defmodule ImageStreaming.CameraCommsWebsocketTest do
     test "token for camera that is no longer there" do
       req =
         -1
-        |> Cameras.token_for()
+        |> Cameras.token_for(:camera)
         |> req()
 
       assert {:ok, %{has_sent_resp: true}, _} = CameraCommsWebsocket.init(req, %{})
@@ -59,7 +59,7 @@ defmodule ImageStreaming.CameraCommsWebsocketTest do
       assert {[{:binary, message}], ^state} = CameraCommsWebsocket.websocket_init(state)
       assert {:token_refresh, token} = :erlang.binary_to_term(message)
 
-      assert {:ok, %{id: ^camera_id}} = Cameras.from_token(token)
+      assert {:ok, %{id: ^camera_id}} = Cameras.from_token(token, :camera)
     end
   end
 

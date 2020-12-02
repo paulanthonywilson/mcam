@@ -16,7 +16,7 @@ defmodule McamServerWeb.Camera.CameraRegistrationController do
       {:ok, camera} ->
         conn
         |> put_status(200)
-        |> json(Cameras.token_for(camera))
+        |> json(Cameras.token_for(camera, :camera))
 
       {:error, :authentication_failure} ->
         conn

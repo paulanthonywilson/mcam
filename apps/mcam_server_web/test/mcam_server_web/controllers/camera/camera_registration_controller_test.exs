@@ -18,7 +18,7 @@ defmodule McamServerWeb.Camera.CameraRegistrationControllerTest do
 
     assert response = json_response(conn, 200)
 
-    assert {:ok, %{board_id: "c3p0", owner_id: ^user_id}} = Cameras.from_token(response)
+    assert {:ok, %{board_id: "c3p0", owner_id: ^user_id}} = Cameras.from_token(response, :camera)
   end
 
   test "invalid user details", %{conn: conn} do

@@ -12,7 +12,7 @@ defmodule ImageStreaming.CameraCommsWebsocket do
   @acknowledge_image_receipt "\n"
 
   def init(req = %{bindings: %{token: token}}, opts) do
-    case Cameras.from_token(token) do
+    case Cameras.from_token(token, :camera) do
       {:ok, %{id: camera_id}} ->
         {:cowboy_websocket, req, Map.put(opts, :camera_id, camera_id)}
 
@@ -32,7 +32,7 @@ defmodule ImageStreaming.CameraCommsWebsocket do
   end
 
   def websocket_init(%{camera_id: camera_id} = state) do
-    refreshed_token = Cameras.token_for(camera_id)
+    refreshed_token = Cameras.token_for(camera_id, :camera)
     message = :erlang.term_to_binary({:token_refresh, refreshed_token})
     {[binary: message], state}
   end

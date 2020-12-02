@@ -1,3 +1,2 @@
 defmodule ImageStreamingBrowserCommsWebsocket do
-  
 end
