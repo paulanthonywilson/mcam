@@ -1,4 +1,15 @@
 defmodule ServerComms.Ws.WebsocketHandler do
+  @moduledoc """
+  Communicates with the server, primarily sending camera images up to form the MPEG stream.
+
+  Uses the traditional Jermy Ong Websocket client but forked [here](https://github.com/paulanthonywilson/websocket_client)
+  as some of the Erlang is deprecated.
+
+  Also deals with image refresh; has the potential for dealing with other demands
+  such as changing the camera settings.
+
+  """
+
   @behaviour :websocket_client_handler
 
   alias ServerComms.Ws.Tick

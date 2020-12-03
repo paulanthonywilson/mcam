@@ -1,4 +1,7 @@
 defmodule McamServerWeb.CameraComponent do
+  @moduledoc """
+  Sets up the image for serving camera images in the browser.
+  """
   use McamServerWeb, :live_component
 
   alias McamServer.Cameras

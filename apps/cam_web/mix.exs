@@ -38,10 +38,10 @@ defmodule CamWeb.MixProject do
   defp deps do
     [
       {:phoenix, "~> 1.5.6"},
-      {:phoenix_live_view, "~> 0.14.6"},
+      {:phoenix_live_view, "~> 0.15.0"},
       {:floki, ">= 0.27.0", only: :test},
       {:phoenix_html, "~> 2.11"},
-      {:phoenix_live_dashboard, "~> 0.3 or ~> 0.2.9"},
+      {:phoenix_live_dashboard, " 0.4.0"},
       {:telemetry_metrics, "~> 0.4"},
       {:telemetry_poller, "~> 0.4"},
       {:gettext, "~> 0.11"},

@@ -1,4 +1,9 @@
 defmodule ServerComms.Ws.WebsocketConnector do
+  @moduledoc """
+  Deals with connecting the websocket to the server. Takes a "let it die" approach
+  to losing connections.
+  """
+
   use GenServer
 
   alias ServerComms.Ws.WebsocketHandler

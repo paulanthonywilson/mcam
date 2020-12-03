@@ -1,4 +1,9 @@
 defmodule McamServer.Cameras.Camera do
+  @moduledoc """
+  Represents a Pi camera. The board id and owner email define the camera. The same board id
+  registered with a different owner email is considered a new camera.
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
 

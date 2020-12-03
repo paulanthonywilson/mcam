@@ -11,7 +11,7 @@ defmodule ImageStreaming.CameraCommsWebsocket do
 
   @acknowledge_image_receipt "\n"
 
-  def init(req = %{bindings: %{token: token}}, opts) do
+  def init(%{bindings: %{token: token}} = req, opts) do
     case Cameras.from_token(token, :camera) do
       {:ok, %{id: camera_id}} ->
         {:cowboy_websocket, req, Map.put(opts, :camera_id, camera_id)}
@@ -48,7 +48,7 @@ defmodule ImageStreaming.CameraCommsWebsocket do
     :ok
   end
 
-  def websocket_handle({:binary, image}, state = %{camera_id: camera_id}) do
+  def websocket_handle({:binary, image}, %{camera_id: camera_id} = state) do
     Monitoring.image_received(camera_id)
     Cameras.broadcast_image(camera_id, image)
     {:reply, {:binary, @acknowledge_image_receipt}, state}

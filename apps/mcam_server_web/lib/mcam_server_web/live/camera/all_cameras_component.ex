@@ -1,4 +1,7 @@
 defmodule McamServerWeb.AllCamerasComponent do
+  @moduledoc """
+  Component for listing a user's cameras, and selecting the camera to view.camera
+  """
   use McamServerWeb, :live_component
 
   def render(assigns) do

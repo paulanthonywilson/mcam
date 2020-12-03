@@ -11,7 +11,7 @@ defmodule ImageStreaming.ImagesToBrowserWebsocket do
 
   @refresh_token_every 1_000
 
-  def init(req = %{bindings: %{token: token}}, opts) do
+  def init(%{bindings: %{token: token}} = req, opts) do
     case Cameras.from_token(token, :browser) do
       {:ok, %{id: camera_id}} ->
         {:cowboy_websocket, req, Map.put(opts, :camera_id, camera_id)}
