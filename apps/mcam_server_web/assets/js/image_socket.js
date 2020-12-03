@@ -2,12 +2,13 @@ export class ImageSocket {
     constructor(img) {
         this.img = img;
         this.ws_url = img.dataset.binaryWsUrl;
+        this.token = img.dataset.wsToken;
     }
 
     connect() {
-        console.log("connect", this.ws_url);
+        console.log("connect", this.ws_url, this.token);
         this.hasErrored = false;
-        this.socket = new WebSocket(this.ws_url);
+        this.socket = new WebSocket(`${this.ws_url}/${this.token}`);
         let that = this;
         this.socket.onopen = () => { that.onOpen(); }
         this.socket.onclose = () => { that.onClose(); }
@@ -30,8 +31,23 @@ export class ImageSocket {
     }
 
     onMessage(messageEvent) {
+        if (typeof messageEvent.data == "string") {
+            this.stringMessage(messageEvent.data);
+        } else {
+            this.binaryMessage(messageEvent.data);
+        }
+    }
+
+    stringMessage(content) {
+        if (content.startsWith("token:")) {
+            this.token = content.slice(6);
+        }
+    }
+
+
+    binaryMessage(content) {
         let oldImageUrl = this.img.src;
-        let imageUrl = URL.createObjectURL(messageEvent.data);
+        let imageUrl = URL.createObjectURL(content);
         this.img.src = imageUrl;
 
         if (oldImageUrl != "") {

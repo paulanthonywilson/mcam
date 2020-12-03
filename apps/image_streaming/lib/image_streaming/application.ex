@@ -19,8 +19,8 @@ defmodule ImageStreaming.Application do
     [
       {:_,
        [
-         {"/raw_ws/camera_interface/:token", ImageStreaming.CameraCommsWebsocket, %{}}
-         #  {"/raw_ws/browser_interface/:token", ImageStreaming.ImagesToBrowserWebsocketHandler, %{}}
+         {"/raw_ws/camera_interface/:token", ImageStreaming.CameraCommsWebsocket, %{}},
+         {"/raw_ws/browser_interface/:token", ImageStreaming.ImagesToBrowserWebsocket, %{}}
        ]}
     ]
   end

@@ -10,6 +10,7 @@ defmodule McamServer.Cameras do
   alias Phoenix.PubSub
 
   @four_weeks 60 * 60 * 24 * 7 * 4
+  @one_hour 60 * 60
   @pubsub McamServer.PubSub
 
   @type token_target :: :camera | :browser
@@ -79,7 +80,7 @@ defmodule McamServer.Cameras do
              token_config(token_target, :secret),
              token_config(token_target, :salt),
              token,
-             max_age: @four_weeks
+             max_age: max_age(token_target)
            ),
          {_, camera} when not is_nil(camera) <- {:camera, Repo.get(Camera, id)} do
       {:ok, camera}
@@ -122,4 +123,7 @@ defmodule McamServer.Cameras do
 
   defp token_env(:camera), do: Application.fetch_env!(:mcam_server, :camera_token)
   defp token_env(:browser), do: Application.fetch_env!(:mcam_server, :browser_token)
+
+  defp max_age(:camera), do: @four_weeks
+  defp max_age(:browser), do: @one_hour
 end

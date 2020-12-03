@@ -1,6 +1,8 @@
 defmodule McamServerWeb.CameraComponent do
   use McamServerWeb, :live_component
 
+  alias McamServer.Cameras
+
   def render(%{camera: nil} = assigns) do
     ~L"""
     <h2>No camera</h2>
@@ -11,11 +13,19 @@ defmodule McamServerWeb.CameraComponent do
   def render(assigns) do
     ~L"""
     <h2><%= @camera.board_id %> </h2>
-    <img id="cam-image" phx-hook="ImageHook" data-binary-ws-url="<%= receive_images_websocket_url() %>"></img>
+    <img id="cam-image" phx-hook="ImageHook"
+         data-binary-ws-url="<%= receive_images_websocket_url() %>"
+         data-ws-token="<%= token(@camera) %>" ></img>
     """
   end
 
   defp receive_images_websocket_url do
-    "ws://localhost:4500/raw_ws/images_receive"
+    :server_comms
+    |> Application.fetch_env!(:server_ws)
+    |> Path.join("raw_ws/browser_interface")
+  end
+
+  defp token(camera) do
+    Cameras.token_for(camera, :browser)
   end
 end
