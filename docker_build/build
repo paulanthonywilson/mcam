@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+set -e
+
+APP_NAME=mcam
+APP_VSN=`head VERSION | tr -d "\n"`
+BASE=/home/asdf/build
+OUTPUT_DIR=/home/asdf/artefacts
+
+cd $BASE
+
+
+echo $APP_NAME
+echo $APP_VSN
+
+
+export MIX_ENV=prod
+export MIX_TARGET=web
+
+echo `mix hex.info`
+
+echo "Fetch deps and compile"
+mix deps.get
+
+echo "npm install"
+cd apps/mcam_server_web/assets/
+npm install
+cd $BASE
+
+echo "Include the releases file"
+cp config/web/releases.exs config/releases.exs
+
+echo "Build the release"
+mix release --overwrite
+
+
+
+echo "Tar release to output"
+cd "_build/web_prod/rel/$APP_NAME"
+mkdir -p $OUTPUT_DIR
+tar zcf "$OUTPUT_DIR/$APP_NAME-$APP_VSN.tar.gz" .
+
+echo "Release done"
+
+
+exit 0

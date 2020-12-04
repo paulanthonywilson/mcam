@@ -29,6 +29,7 @@ config :mcam_server_web,
 # Configures the endpoint
 config :mcam_server_web, McamServerWeb.Endpoint,
   url: [host: "localhost"],
+  http: [port: 4600],
   secret_key_base: "uvo2dZbpu/NsUjSBsLx0HN8O+AoNtdCBmBRBLpXR9vY8x5pqZURTNGSjeUxapX7d",
   render_errors: [view: McamServerWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: McamServer.PubSub,

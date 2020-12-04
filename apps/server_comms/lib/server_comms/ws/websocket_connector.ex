@@ -66,7 +66,7 @@ defmodule ServerComms.Ws.WebsocketConnector do
   end
 
   defp ws_url(token) do
-    :server_comms
+    :common
     |> Application.fetch_env!(:server_ws)
     |> Path.join("raw_ws/camera_interface")
     |> Path.join(to_string(token))

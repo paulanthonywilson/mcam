@@ -16,14 +16,14 @@ defmodule McamServerWeb.CameraComponent do
   def render(assigns) do
     ~L"""
     <h2><%= @camera.board_id %> </h2>
-    <img id="cam-image" phx-hook="ImageHook"
+    <img id="cam-image" phx-hook="ImageHook" src="<%= Routes.static_path(@socket, "/images/placeholder.jpeg")  %>"
          data-binary-ws-url="<%= receive_images_websocket_url() %>"
          data-ws-token="<%= token(@camera) %>" ></img>
     """
   end
 
   defp receive_images_websocket_url do
-    :server_comms
+    :common
     |> Application.fetch_env!(:server_ws)
     |> Path.join("raw_ws/browser_interface")
   end

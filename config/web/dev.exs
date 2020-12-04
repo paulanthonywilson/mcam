@@ -16,10 +16,10 @@ config :mcam_server, McamServer.Repo,
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
 config :mcam_server_web, McamServerWeb.Endpoint,
-  http: [port: 4600],
   debug_errors: true,
-  code_reloader: true,
   check_origin: false,
+  # server: true
+  code_reloader: true,
   watchers: [
     node: [
       "node_modules/webpack/bin/webpack.js",

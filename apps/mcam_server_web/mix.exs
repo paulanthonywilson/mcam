@@ -42,6 +42,7 @@ defmodule McamServerWeb.MixProject do
       {:telemetry_poller, "~> 0.4"},
       {:gettext, "~> 0.11"},
       {:mcam_server, in_umbrella: true},
+      {:common, in_umbrella: true},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"}
     ]

@@ -31,7 +31,10 @@ defmodule ServerComms.MixProject do
       {:configure, in_umbrella: true},
       {:camera, in_umbrella: true},
       {:jason, "~> 1.2"},
-      {:websocket_client, path: "~/dev/elixir-opensource/websocket_client"},
+      # {:websocket_client, path: "~/dev/elixir-opensource/websocket_client"},
+      # {:websocket_client, git: "git@github.com:paulanthonywilson/websocket_client.git"},
+      {:websocket_client, github: "paulanthonywilson/websocket_client"},
+
       {:mox, "~> 1.0", only: :test}
     ]
   end

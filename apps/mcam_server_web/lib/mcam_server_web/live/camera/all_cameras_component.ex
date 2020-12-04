@@ -6,7 +6,7 @@ defmodule McamServerWeb.AllCamerasComponent do
 
   def render(assigns) do
     ~L"""
-    <h2>Cameras</h2>
+    <h2>Your Cameras</h2>
     <ul class="camera-list">
     <%= for cam <- @all_cameras do %>
       <li>

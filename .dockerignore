@@ -1,0 +1,16 @@
+.git
+_build
+*.dump
+bin
+deps
+.elixir_ls
+rel/artifacts
+**/priv/static
+**/node_modules
+
+apps/cam_web
+apps/camera
+apps/configure
+apps/direct_image_sender
+apps/fw
+apps/server_comms

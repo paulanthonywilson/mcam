@@ -2,8 +2,7 @@ import Config
 
 config :mcam_server, McamServer.Accounts.UserNotifier,
   adapter: Bamboo.MailgunAdapter,
-  api_key: {:system, "MAILGUN_API_KEY"},
-  domain: {:system, "MAILGUN_DOMAIN"},
+  from: "merecam@iscodebaseonfire.com",
   hackney_opts: [
     recv_timeout: :timer.minutes(1)
   ]

@@ -56,6 +56,7 @@ defmodule Fw.MixProject do
       {:nerves_system_x86_64, "~> 1.13", runtime: false, targets: :x86_64},
 
       # Umbrella apps in this project
+      {:common, in_umbrella: true},
       {:cam_web, in_umbrella: true},
       {:camera, in_umbrella: true},
       {:configure, in_umbrella: true},

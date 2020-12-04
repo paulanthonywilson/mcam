@@ -50,6 +50,7 @@ defmodule CamWeb.MixProject do
       {:configure, in_umbrella: true},
       {:direct_image_sender, in_umbrella: true},
       {:server_comms, in_umbrella: true},
+      {:common, in_umbrella: true},
       {:phoenix_ecto, "~> 4.2"}
     ] ++ deps(Mix.target())
   end

@@ -43,7 +43,7 @@ defmodule ServerComms.Api do
   end
 
   defp register_url do
-    :server_comms
+    :common
     |> Application.fetch_env!(:server_url)
     |> Path.join("api/register_camera")
   end
