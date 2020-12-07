@@ -26,7 +26,7 @@ defmodule McamServer.Cameras do
     case Accounts.get_user_by_email_and_password(owner_email, owner_password) do
       %{id: user_id} ->
         %Camera{owner_id: user_id}
-        |> Camera.changeset(%{board_id: board_id})
+        |> Camera.changeset(%{board_id: board_id, name: board_id})
         |> Repo.insert()
         |> maybe_broadcast_registration()
         |> maybe_retreive_original_if_duplicate({user_id, board_id})

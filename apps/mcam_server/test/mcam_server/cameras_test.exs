@@ -13,7 +13,7 @@ defmodule McamServer.CamerasTest do
     test "when the camera is new, the user exists, and the password is correct", %{
       user: %{id: user_id}
     } do
-      assert {:ok, %Camera{owner_id: ^user_id, board_id: "00af8", id: camera_id}} =
+      assert {:ok, %Camera{owner_id: ^user_id, board_id: "00af8", id: camera_id, name: "00af8"}} =
                Cameras.register("bob@bob.com", "hellomateyboy", "00af8")
 
       assert_receive {:camera_registration, %{id: ^camera_id}}

@@ -28,7 +28,6 @@ defmodule McamServerWeb.CameraLive do
           </div>
         </div>
       </div>
-
     </div>
     """
   end

@@ -9,7 +9,6 @@ import Config
 
 config :common, server_url: server_url, server_ws: server_ws
 
-
 IO.inspect(Mix.target(), label: "*******************")
 
 case Mix.target() do
