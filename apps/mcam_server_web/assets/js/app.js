@@ -25,6 +25,12 @@ Hooks.ImageHook = {
     mounted() {
         let imageSocket = new ImageSocket(this.el);
         imageSocket.connect();
+        this.socket = imageSocket;
+    },
+    updated() {
+        if (this.socket) this.socket.close();
+        let imageSocket = new ImageSocket(this.el);
+        imageSocket.connect();
     }
 }
 

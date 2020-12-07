@@ -21,7 +21,7 @@ defmodule McamServer.Cameras.Camera do
   def changeset(camera, attrs) do
     camera
     |> cast(attrs, [:board_id, :name])
-    |> validate_required([:board_id])
+    |> validate_required([:board_id, :name])
     |> unique_constraint([:owner_id, :board_id], name: :cameras_board_id_owner_id_index)
   end
 end

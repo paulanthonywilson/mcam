@@ -6,7 +6,7 @@ export class ImageSocket {
     }
 
     connect() {
-        console.log("connect", this.ws_url, this.token);
+        console.log("connect");
         this.hasErrored = false;
         this.socket = new WebSocket(`${this.ws_url}/${this.token}`);
         let that = this;
@@ -14,6 +14,13 @@ export class ImageSocket {
         this.socket.onclose = () => { that.onClose(); }
         this.socket.onerror = errorEvent => { that.onError(errorEvent); };
         this.socket.onmessage = messageEvent => { that.onMessage(messageEvent); };
+        this.attemptReopen = true;
+    }
+
+    close() {
+        this.attemptReopen = false;
+        this.socket.close();
+        this.socket = null;
     }
 
     onOpen() {
@@ -40,6 +47,7 @@ export class ImageSocket {
 
     stringMessage(content) {
         if (content.startsWith("token:")) {
+            console.log("token refresh");
             this.token = content.slice(6);
         }
     }
@@ -62,7 +70,7 @@ export class ImageSocket {
     maybeReopen() {
         let after = this.hasErrored ? 2000 : 0;
         setTimeout(() => {
-            if (this.isSocketClosed()) this.connect();
+            if (this.isSocketClosed() && this.attemptReopen) this.connect();
         }, after);
     };
 }

@@ -4,8 +4,8 @@ defmodule McamServer.CamerasTest do
   alias McamServer.{AccountsFixtures, CamerasFixtures, Cameras, Cameras.Camera}
 
   setup do
-    Cameras.subscribe_to_registrations()
     user = AccountsFixtures.user_fixture(%{email: "bob@bob.com", password: "hellomateyboy"})
+    Cameras.subscribe_to_registrations(user)
     {:ok, user: user}
   end
 
@@ -121,5 +121,33 @@ defmodule McamServer.CamerasTest do
              user
              |> Cameras.user_cameras()
              |> Enum.map(& &1.board_id)
+  end
+
+  describe "update camera name" do
+    test "can succeed" do
+      camera = CamerasFixtures.camera_fixture()
+
+      assert {:ok, %Camera{name: "Bobby the great"}} =
+               Cameras.change_name(camera, "Bobby the great")
+
+      assert {:ok, %{name: "Bobby the great"}} =
+               camera
+               |> Cameras.token_for(:browser)
+               |> Cameras.from_token(:browser)
+    end
+
+    test "subscribing to name change" do
+      camera = CamerasFixtures.camera_fixture()
+      Cameras.subscribe_to_name_change(camera)
+      {:ok, _} = Cameras.change_name(camera, "Oh Ferdinand")
+      assert_receive {:camera_name_change, %Camera{name: "Oh Ferdinand"}}
+    end
+
+    test "name can't be blank" do
+      camera = CamerasFixtures.camera_fixture()
+      Cameras.subscribe_to_name_change(camera)
+      assert {:error, _} = Cameras.change_name(camera, "")
+      refute_receive {:camera_name_change, _}
+    end
   end
 end

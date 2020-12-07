@@ -5,18 +5,46 @@ defmodule McamServerWeb.CameraLive do
   use McamServerWeb, :live_view
 
   alias McamServer.{Accounts, Cameras}
+  alias McamServerWeb.EditItemFormComponent
 
-  import McamServerWeb.CameraLiveHelper, only: [selected_camera: 2]
+  import McamServerWeb.CameraLiveHelper, only: [selected_camera: 2, update_camera: 2]
 
-  def mount(params, %{"user_token" => user_token}, socket) do
+  def mount(_params, %{"user_token" => user_token}, socket) do
     user = Accounts.get_user_by_session_token(user_token)
     all_cameras = Cameras.user_cameras(user)
+    for cam <- all_cameras, do: Cameras.subscribe_to_name_change(cam)
+
+    {:ok, assign(socket, user: user, all_cameras: all_cameras)}
+  end
+
+  def handle_params(params, _, socket) do
+    %{assigns: %{all_cameras: all_cameras}} = socket
+
     camera = selected_camera(params, all_cameras)
-    {:ok, assign(socket, user: user, all_cameras: all_cameras, camera: camera)}
+    from_camera_id = params["from_camera_id"]
+    {:noreply, assign(socket, camera: camera, from_camera_id: from_camera_id)}
+  end
+
+  def handle_event("update-camera-name", %{"camera-name" => camera_name}, socket) do
+    %{assigns: %{from_camera_id: from_camera_id, camera: camera}} = socket
+    Cameras.change_name(camera, camera_name)
+    {:noreply, push_patch(socket, to: edit_return_path(socket, from_camera_id))}
+  end
+
+  def handle_info({:camera_name_change, updated}, socket) do
+    {camera, all_cameras} = update_camera(updated, socket)
+    {:noreply, assign(socket, camera: camera, all_cameras: all_cameras)}
+  end
+
+  defp edit_return_path(socket, from_camera_id) do
+    Routes.camera_path(socket, :show, from_camera_id)
   end
 
   def render(assigns) do
     ~L"""
+    <%= if @live_action == :edit do %>
+      <%= live_modal @socket, EditItemFormComponent, camera: @camera, return_to: edit_return_path(@socket, @from_camera_id)  %>
+    <% end %>
     <div class="row">
       <div class="column column-70">
             <%= live_component @socket, McamServerWeb.CameraComponent,  camera: @camera %>

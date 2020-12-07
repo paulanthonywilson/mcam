@@ -18,7 +18,7 @@ defmodule McamServerWeb.AllCamerasComponent do
       <% end %>
       </span>
       <span class="column">
-      <%= button "Edit", [to: "#", class: "button button-clear"] %>
+      <%= link "Edit", [to: Routes.camera_path(@socket, :edit, cam.id, @camera.id), class: "button button-clear"] %>
       </span>
       </li>
     <% end %>

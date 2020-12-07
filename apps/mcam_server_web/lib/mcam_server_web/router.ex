@@ -66,11 +66,19 @@ defmodule McamServerWeb.Router do
 
     live "/cameras", CameraLive, :index
     live "/camera/:camera_id", CameraLive, :show
+    live "/camera/:camera_id/:from_camera_id/edit", CameraLive, :edit
 
     get "/users/settings", UserSettingsController, :edit
     put "/users/settings/update_password", UserSettingsController, :update_password
     put "/users/settings/update_email", UserSettingsController, :update_email
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
+
+    live "/penguins", PenguinLive.Index, :index
+    live "/penguins/new", PenguinLive.Index, :new
+    live "/penguins/:id/edit", PenguinLive.Index, :edit
+
+    live "/penguins/:id", PenguinLive.Show, :show
+    live "/penguins/:id/show/edit", PenguinLive.Show, :edit
   end
 
   # For unconfirmed but authenticated

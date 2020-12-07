@@ -9,7 +9,7 @@ defmodule ImageStreaming.ImagesToBrowserWebsocket do
 
   require Logger
 
-  @refresh_token_every 1_000
+  @refresh_token_every 1_000 * 60 * 10
 
   def init(%{bindings: %{token: token}} = req, opts) do
     case Cameras.from_token(token, :browser) do
@@ -28,7 +28,7 @@ defmodule ImageStreaming.ImagesToBrowserWebsocket do
   end
 
   def websocket_init(%{camera_id: camera_id} = state) do
-    Process.send_after(self(), :refresh_token, @refresh_token_every)
+    send(self(), :refresh_token)
     Cameras.subscribe_to_camera(camera_id)
     {:ok, state}
   end
