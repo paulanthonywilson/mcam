@@ -18,7 +18,7 @@ defmodule McamServerWeb.CameraLive do
   def render(assigns) do
     ~L"""
     <div class="row">
-      <div class="column column-8 0">
+      <div class="column column-70">
             <%= live_component @socket, McamServerWeb.CameraComponent,  camera: @camera %>
       </div>
       <div class="column">
