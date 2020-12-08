@@ -1,7 +1,14 @@
 import Config
 
-config :mcam_server, McamServer.Accounts.UserNotifier,
-  adapter: Bamboo.MailgunAdapter,
+adapter = case Mix.env() do
+  :test -> Bamboo.TestAdapter
+
+  # Sending emails from dev because it's still fairly convenient right now
+  _ -> Bamboo.MailgunAdapter
+end
+
+config :mcam_server, McamServer.Mailing.Mailer,
+  adapter: adapter,
   from: "merecam@iscodebaseonfire.com",
   hackney_opts: [
     recv_timeout: :timer.minutes(1)

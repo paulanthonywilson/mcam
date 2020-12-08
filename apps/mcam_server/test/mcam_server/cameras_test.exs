@@ -1,5 +1,5 @@
 defmodule McamServer.CamerasTest do
-  use McamServer.DataCase
+  use McamServer.DataCase, async: true
 
   alias McamServer.{AccountsFixtures, CamerasFixtures, Cameras, Cameras.Camera}
 

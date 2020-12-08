@@ -77,4 +77,16 @@ defmodule McamServerWeb.CameraLiveHelperTest do
                CameraLiveHelper.update_camera(%{id: 11, name: "dunno"}, socket)
     end
   end
+
+  test "basic email validation" do
+    assert :ok == CameraLiveHelper.basic_email_validate("bob@bob.com")
+    assert :bad_email == CameraLiveHelper.basic_email_validate("bob@")
+    assert :bad_email == CameraLiveHelper.basic_email_validate("")
+    assert :bad_email == CameraLiveHelper.basic_email_validate("@bob.com")
+    assert :bad_email == CameraLiveHelper.basic_email_validate("bob.com")
+    assert :bad_email == CameraLiveHelper.basic_email_validate("bob@")
+    assert :bad_email == CameraLiveHelper.basic_email_validate("bob@bob")
+    assert :bad_email == CameraLiveHelper.basic_email_validate("bob@.com")
+    assert :ok == CameraLiveHelper.basic_email_validate("bob@bob.abcd")
+  end
 end

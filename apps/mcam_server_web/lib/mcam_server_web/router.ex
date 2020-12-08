@@ -68,6 +68,8 @@ defmodule McamServerWeb.Router do
     live "/camera/:camera_id", CameraLive, :show
     live "/camera/:camera_id/:from_camera_id/edit", CameraLive, :edit
 
+    live "/guest_invitations/:invitation_token", AcceptGuestInvitationLive, :new
+
     get "/users/settings", UserSettingsController, :edit
     put "/users/settings/update_password", UserSettingsController, :update_password
     put "/users/settings/update_email", UserSettingsController, :update_email

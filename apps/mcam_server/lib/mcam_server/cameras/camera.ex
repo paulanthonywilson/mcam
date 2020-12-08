@@ -7,11 +7,13 @@ defmodule McamServer.Cameras.Camera do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias McamServer.Accounts.User
+
   @type t :: %__MODULE__{}
 
   schema "cameras" do
     field :board_id, :string
-    field :owner_id, :id
+    belongs_to :owner, User
     field :name, :string
 
     timestamps()

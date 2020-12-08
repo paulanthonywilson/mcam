@@ -19,7 +19,7 @@ export class ImageSocket {
 
     close() {
         this.attemptReopen = false;
-        this.socket.close();
+        if (this.socket) this.socket.close();
         this.socket = null;
     }
 

@@ -39,4 +39,8 @@ defmodule McamServerWeb.CameraLiveHelper do
   end
 
   defp do_update_camera(_, acc, []), do: Enum.reverse(acc)
+
+  def basic_email_validate(alleged_email) do
+    if alleged_email =~ ~r/.+@.+\..+/, do: :ok, else: :bad_email
+  end
 end

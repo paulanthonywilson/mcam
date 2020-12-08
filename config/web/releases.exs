@@ -22,6 +22,6 @@ config :mcam_server, McamServer.Repo,
   url: System.get_env("MCAM_DATABASE_URL"),
   pool_size: String.to_integer(System.fetch_env!("MCAM_POOL_SIZE") || "10")
 
-config :mcam_server, McamServer.Accounts.UserNotifier,
+config :mcam_server, McamServer.Mailing.Mailer,
   api_key: System.fetch_env!("MCAM_MAILGUN_API_KEY"),
   domain: System.fetch_env!("MCAM_MAILGUN_DOMAIN")
