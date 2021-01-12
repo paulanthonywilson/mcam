@@ -150,4 +150,12 @@ defmodule McamServer.CamerasTest do
       refute_receive {:camera_name_change, _}
     end
   end
+
+  describe "guest cameras" do
+    test "lists guest cameras", %{user: user} do
+      camera = CamerasFixtures.camera_fixture()
+      CamerasFixtures.add_guest(camera, user)
+      assert [camera] == Cameras.guest_cameras(user)
+    end
+  end
 end

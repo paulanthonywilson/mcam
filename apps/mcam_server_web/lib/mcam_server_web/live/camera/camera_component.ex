@@ -6,7 +6,7 @@ defmodule McamServerWeb.CameraComponent do
 
   alias McamServer.Cameras
 
-  def render(%{camera: nil} = assigns) do
+  def render(%{camera: :no_camera} = assigns) do
     ~L"""
     <h2>No camera</h2>
     <p>Instructions for setting up cameras go here.</p>
@@ -14,8 +14,10 @@ defmodule McamServerWeb.CameraComponent do
   end
 
   def render(assigns) do
+    assigns = Map.put_new(assigns, :title_prefix, "")
+
     ~L"""
-    <h2><%= @camera.name %> </h2>
+    <h2><%= @title_prefix %><%= @camera.name %> </h2>
     <img id="cam-image" phx-hook="ImageHook" src="<%= Routes.static_path(@socket, "/images/placeholder.jpeg")  %>"
          data-binary-ws-url="<%= receive_images_websocket_url() %>"
          data-ws-token="<%= token(@camera) %>" ></img>

@@ -4,25 +4,21 @@ defmodule McamServerWeb.CameraLive do
   """
   use McamServerWeb, :live_view
 
-  alias McamServer.{Accounts, Cameras}
+  alias McamServer.Cameras
   alias McamServerWeb.EditItemFormComponent
 
-  import McamServerWeb.CameraLiveHelper, only: [selected_camera: 2, update_camera: 2]
+  import McamServerWeb.CameraLiveHelper,
+    only: [selected_camera: 2, update_camera: 2, mount_camera: 3]
 
-  def mount(_params, %{"user_token" => user_token}, socket) do
-    user = Accounts.get_user_by_session_token(user_token)
-    all_cameras = Cameras.user_cameras(user)
-    for cam <- all_cameras, do: Cameras.subscribe_to_name_change(cam)
-    Cameras.subscribe_to_registrations(user)
-
-    {:ok, assign(socket, user: user, all_cameras: all_cameras)}
+  def mount(params, session, socket) do
+    mount_camera(params, session, socket)
   end
 
   def handle_params(params, _, socket) do
-    %{assigns: %{all_cameras: all_cameras}} = socket
+    camera = selected_camera(params, socket)
 
-    camera = selected_camera(params, all_cameras)
     from_camera_id = params["from_camera_id"]
+
     {:noreply, assign(socket, camera: camera, from_camera_id: from_camera_id)}
   end
 
@@ -33,8 +29,10 @@ defmodule McamServerWeb.CameraLive do
   end
 
   def handle_info({:camera_name_change, updated}, socket) do
-    {camera, all_cameras} = update_camera(updated, socket)
-    {:noreply, assign(socket, camera: camera, all_cameras: all_cameras)}
+    {camera, all_cameras, guest_cameras} = update_camera(updated, socket)
+
+    {:noreply,
+     assign(socket, camera: camera, all_cameras: all_cameras, guest_cameras: guest_cameras)}
   end
 
   def handle_info({:camera_registration, camera}, socket) do
@@ -59,6 +57,11 @@ defmodule McamServerWeb.CameraLive do
         <div class="row">
           <div class="column">
             <%= live_component @socket, McamServerWeb.AllCamerasComponent, all_cameras: @all_cameras, camera: @camera %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="column">
+            <%= live_component @socket, McamServerWeb.GuestCamerasComponenent, guest_cameras: @guest_cameras, camera: @camera %>
           </div>
         </div>
         <div class="row">

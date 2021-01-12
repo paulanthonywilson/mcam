@@ -7,7 +7,7 @@ defmodule McamServer.Cameras do
 
   alias McamServer.{Accounts, Repo}
   alias McamServer.Accounts.User
-  alias McamServer.Cameras.Camera
+  alias McamServer.Cameras.{Camera, GuestCamera}
   alias McamServer.Tokens
   alias Phoenix.PubSub
 
@@ -108,6 +108,19 @@ defmodule McamServer.Cameras do
   end
 
   def user_cameras(user_id) do
+    Repo.all(from c in Camera, where: c.owner_id == ^user_id)
+  end
+
+  def guest_cameras(%{id: user_id}) do
+    Repo.all(
+      from c in Camera,
+        join: g in GuestCamera,
+        on: c.id == g.camera_id,
+        where: g.guest_id == ^user_id
+    )
+  end
+
+  def guest_cameras(user_id) do
     Repo.all(from c in Camera, where: c.owner_id == ^user_id)
   end
 

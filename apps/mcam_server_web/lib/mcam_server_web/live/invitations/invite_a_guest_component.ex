@@ -14,6 +14,7 @@ defmodule McamServerWeb.InviteAGuestComponent do
   def render(assigns) do
     ~L"""
     <h2>Invite a guest</h2>
+    <p>Invite someone to view the current camera. </p>
     <%= live_component @socket, McamServerWeb.FlashComponent, flash: @flash, clear_target: @myself %>
     <form phx-submit="invite-a-guest" phx-target="<%= @myself %>" phx-change="email-change">
     <label for="guest-email">Guest email</label>

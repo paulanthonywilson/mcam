@@ -32,15 +32,18 @@ defmodule McamServerWeb.AcceptGuestInvitationLive do
   def handle_event("accept", _, socket) do
     %{user: user, invitation_token: token} = socket.assigns
 
-    case GuestInvitations.accept_invitation(user, token) do
-      {:ok, camera} ->
-        socket
-        |> put_flash(:info, "Accepted invitation")
-        |> redirect(to: Routes.camera_path(socket, :show, camera))
+    socket =
+      case GuestInvitations.accept_invitation(user, token) do
+        {:ok, camera} ->
+          socket
+          |> put_flash(:info, "Accepted invitation")
+          |> redirect(to: Routes.guest_camera_path(socket, :show, camera))
 
-      {:error, reason} ->
-        {:noreply, error_redirect(socket, reason)}
-    end
+        {:error, reason} ->
+          error_redirect(socket, reason)
+      end
+
+    {:noreply, socket}
   end
 
   defp error_redirect(socket, reason) do

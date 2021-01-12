@@ -5,7 +5,8 @@ defmodule McamServer.CamerasFixtures do
   """
 
   alias McamServer.Accounts.User
-  alias McamServer.{AccountsFixtures, Cameras}
+  alias McamServer.{AccountsFixtures, Cameras, Repo}
+  alias McamServer.Cameras.{Camera, GuestCamera}
 
   def unique_board_id, do: "0000#{System.unique_integer()}"
 
@@ -22,5 +23,16 @@ defmodule McamServer.CamerasFixtures do
     password = user_attrs[:password] || AccountsFixtures.valid_user_password()
     user = AccountsFixtures.user_fixture(Map.put(user_attrs, :password, password))
     user_camera_fixture(user, password, camera_attrs)
+  end
+
+  def add_guest(%Camera{id: camera_id}, %User{id: guest_id, email: email}) do
+    %GuestCamera{}
+    |> GuestCamera.changeset(%{
+      guest_id: guest_id,
+      camera_id: camera_id,
+      invitation_expiry: NaiveDateTime.utc_now(),
+      invitation_email: email
+    })
+    |> Repo.insert!()
   end
 end
