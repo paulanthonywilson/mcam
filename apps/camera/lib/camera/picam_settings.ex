@@ -7,6 +7,8 @@ defmodule Camera.PicamSettings do
 
   @name __MODULE__
 
+  @set_all_timeout 90_000
+
   def start_link(_) do
     GenServer.start_link(__MODULE__, {}, name: @name)
   end
@@ -17,17 +19,18 @@ defmodule Camera.PicamSettings do
 
   def handle_continue(:set, s) do
     :ok = Configure.subscribe()
-    set(:camera_size, Configure.camera_size())
-    set(:camera_rotation, Configure.camera_rotation())
-    set(:camera_awb_mode, Configure.camera_awb_mode())
-    set(:camera_img_effect, Configure.camera_img_effect())
-    set(:camera_exposure_mode, Configure.camera_exposure_mode())
-    {:noreply, s}
+    set_all()
+    {:noreply, s, @set_all_timeout}
   end
 
   def handle_info({:updated_config, setting, value}, s) do
     set(setting, value)
-    {:noreply, s}
+    {:noreply, s, @set_all_timeout}
+  end
+
+  def handle_info(:timeout, s) do
+    set_all()
+    {:noreply, s, @set_all_timeout}
   end
 
   defp set(:camera_size, {w, h}), do: Picam.set_size(w, h)
@@ -36,4 +39,12 @@ defmodule Camera.PicamSettings do
   defp set(:camera_img_effect, effect), do: Picam.set_img_effect(effect)
   defp set(:camera_exposure_mode, mode), do: Picam.set_exposure_mode(mode)
   defp set(_, _), do: :ok
+
+  defp set_all do
+    set(:camera_size, Configure.camera_size())
+    set(:camera_rotation, Configure.camera_rotation())
+    set(:camera_awb_mode, Configure.camera_awb_mode())
+    set(:camera_img_effect, Configure.camera_img_effect())
+    set(:camera_exposure_mode, Configure.camera_exposure_mode())
+  end
 end

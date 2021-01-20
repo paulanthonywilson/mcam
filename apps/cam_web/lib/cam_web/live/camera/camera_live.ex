@@ -4,19 +4,26 @@ defmodule CamWeb.CameraLive do
   as settings and registration.
   """
   use CamWeb, :live_view
-  alias CamWeb.{CameraSettingsComponent, RegistrationComponent}
+  alias CamWeb.{CameraSettingsComponent, RegistrationComponent, ServerConnectionComponent}
 
   import DirectImageSender, only: [receive_images_websocket_url: 0]
 
   def mount(_params, _session, socket) do
     Configure.subscribe()
     settings = Enum.into(Configure.all_settings(), [])
-    {:ok, assign(socket, settings: settings)}
+    :ok = ServerComms.subscribe()
+
+    {:ok,
+     assign(socket, settings: settings, server_connection_status: ServerComms.connection_status())}
   end
 
   def handle_info({:updated_config, key, value}, socket) do
     settings = update_setting(socket, key, value)
     {:noreply, assign(socket, settings: settings)}
+  end
+
+  def handle_info({:server_connection_status_changed, connection_status}, socket) do
+    {:noreply, assign(socket, server_connection_status: connection_status)}
   end
 
   defp update_setting(socket, key, value) do
@@ -28,6 +35,7 @@ defmodule CamWeb.CameraLive do
 
   def render(assigns) do
     ~L"""
+    <%= live_component @socket, ServerConnectionComponent, server_connection_status: @server_connection_status %>
     <div class="row">
       <div class="column-75">
         <img id="cam-image" phx-hook="ImageHook"

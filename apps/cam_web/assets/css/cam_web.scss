@@ -10,3 +10,26 @@ nav.navigation {
 .camera-side { 
    margin: 1.5rem;
 }
+
+.server-connection-component {
+    padding: 1em;
+    .status {
+        text-align: center;
+    }
+
+    .status-connected {
+        background: lightgreen;
+    }
+
+    .status-unregistered {
+        background: lightsalmon;
+    }
+    .status-invalid_registration {
+        background: red;
+        color: white;
+    }
+
+    .status-connecting {
+        background: yellow;
+    }
+}
