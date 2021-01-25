@@ -33,18 +33,16 @@ defmodule Camera.PicamSettings do
     {:noreply, s, @set_all_timeout}
   end
 
-  defp set(:camera_size, {w, h}), do: Picam.set_size(w, h)
-  defp set(:camera_rotation, rotation), do: Picam.set_rotation(rotation)
-  defp set(:camera_awb_mode, mode), do: Picam.set_awb_mode(mode)
-  defp set(:camera_img_effect, effect), do: Picam.set_img_effect(effect)
-  defp set(:camera_exposure_mode, mode), do: Picam.set_exposure_mode(mode)
-  defp set(_, _), do: :ok
+  def set(:camera_size, {w, h}), do: Picam.set_size(w, h)
+  def set(:camera_rotation, rotation), do: Picam.set_rotation(rotation)
+  def set(:camera_awb_mode, mode), do: Picam.set_awb_mode(mode)
+  def set(:camera_img_effect, effect), do: Picam.set_img_effect(effect)
+  def set(:camera_exposure_mode, mode), do: Picam.set_exposure_mode(mode)
+  def set(_, _), do: :ok
 
-  defp set_all do
-    set(:camera_size, Configure.camera_size())
-    set(:camera_rotation, Configure.camera_rotation())
-    set(:camera_awb_mode, Configure.camera_awb_mode())
-    set(:camera_img_effect, Configure.camera_img_effect())
-    set(:camera_exposure_mode, Configure.camera_exposure_mode())
+  def set_all do
+    for {k, v} <- Configure.all_settings() do
+      set(k, v)
+    end
   end
 end
