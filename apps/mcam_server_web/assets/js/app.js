@@ -31,6 +31,15 @@ Hooks.ImageHook = {
         if (this.socket) this.socket.close();
         let imageSocket = new ImageSocket(this.el);
         imageSocket.connect();
+    },
+    disconnected() {
+        this.reloadPageTimer =  setInterval(function() {
+            console.log("reloading");
+            window.location.reload();
+        }, 2 * 60 * 1000);
+    },
+    reconnected() {
+        clearTimeout(this.reloadPageTimer);
     }
 }
 
