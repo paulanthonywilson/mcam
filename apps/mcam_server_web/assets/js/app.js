@@ -36,7 +36,7 @@ Hooks.ImageHook = {
         this.reloadPageTimer =  setInterval(function() {
             console.log("reloading");
             window.location.reload();
-        }, 2 * 60 * 1000);
+        }, 3 * 60 * 1000);
     },
     reconnected() {
         clearTimeout(this.reloadPageTimer);
