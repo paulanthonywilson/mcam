@@ -66,6 +66,10 @@ defmodule McamServerWeb.Router do
 
     live "/cameras", CameraLive, :index
     live "/camera/:camera_id", CameraLive, :show
+
+    live "/fullscreen/camera/:camera_id", CameraLive, :fullscreen,
+      layout: {McamServerWeb.LayoutView, :fullscreen_root}
+
     live "/camera/:camera_id/:from_camera_id/edit", CameraLive, :edit
 
     live "/guest_camera/:camera_id", GuestCameraLive, :show

@@ -17,8 +17,12 @@ defmodule McamServerWeb.CameraComponent do
     assigns = Map.put_new(assigns, :title_prefix, "")
 
     ~L"""
+    <%= unless @live_action == :fullscreen do %>
     <h2><%= @title_prefix %><%= @camera.name %> </h2>
+    <% end %>
     <img id="cam-image" phx-hook="ImageHook" src="<%= Routes.static_path(@socket, "/images/placeholder.jpeg")  %>"
+          <%= if @live_action == :fullscreen, do: "class=fullscreen" %>
+         phx-click="toggle-fullscreen"
          data-binary-ws-url="<%= receive_images_websocket_url() %>"
          data-ws-token="<%= token(@camera) %>" ></img>
     """

@@ -28,6 +28,18 @@ defmodule McamServerWeb.CameraLive do
     {:noreply, push_patch(socket, to: edit_return_path(socket, from_camera_id))}
   end
 
+  def handle_event("toggle-fullscreen", _, socket) do
+    %{assigns: %{camera: camera, live_action: live_action}} = socket
+
+    path =
+      case live_action do
+        :fullscreen -> Routes.camera_path(socket, :show, camera)
+        _ -> Routes.camera_path(socket, :fullscreen, camera)
+      end
+
+    {:noreply, redirect(socket, to: path)}
+  end
+
   def handle_info({:camera_name_change, updated}, socket) do
     {camera, all_cameras, guest_cameras} = update_camera(updated, socket)
 
@@ -44,6 +56,13 @@ defmodule McamServerWeb.CameraLive do
     Routes.camera_path(socket, :show, from_camera_id)
   end
 
+  def render(%{live_action: :fullscreen} = assigns) do
+    ~L"""
+    <%= live_component @socket, McamServerWeb.CameraComponent,  camera: @camera, live_action: @live_action %>
+    </div>
+    """
+  end
+
   def render(assigns) do
     ~L"""
     <%= if @live_action == :edit do %>
@@ -51,7 +70,7 @@ defmodule McamServerWeb.CameraLive do
     <% end %>
     <div class="row">
       <div class="column column-70">
-            <%= live_component @socket, McamServerWeb.CameraComponent,  camera: @camera %>
+            <%= live_component @socket, McamServerWeb.CameraComponent,  camera: @camera, live_action: @live_action %>
       </div>
       <div class="column-30 camera-side">
         <div class="row">
