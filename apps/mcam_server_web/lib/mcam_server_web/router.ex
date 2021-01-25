@@ -74,6 +74,9 @@ defmodule McamServerWeb.Router do
 
     live "/guest_camera/:camera_id", GuestCameraLive, :show
 
+    live "/fullscreen/guest_camera/:camera_id", GuestCameraLive, :fullscreen,
+      layout: {McamServerWeb.LayoutView, :fullscreen_root}
+
     live "/guest_invitations/:invitation_token", AcceptGuestInvitationLive, :new
 
     get "/users/settings", UserSettingsController, :edit

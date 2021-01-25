@@ -16,12 +16,25 @@ defmodule McamServerWeb.GuestCameraLive do
     {:noreply, assign(socket, camera: camera)}
   end
 
+  def handle_event("toggle-fullscreen", _, socket) do
+    %{assigns: %{camera: camera, live_action: live_action}} = socket
+
+    path =
+      case live_action do
+        :fullscreen -> Routes.guest_camera_path(socket, :show, camera)
+        _ -> Routes.guest_camera_path(socket, :fullscreen, camera)
+      end
+
+    {:noreply, redirect(socket, to: path)}
+  end
+
   def render(assigns) do
     ~L"""
     <div class="row">
       <div class="column column-70">
-            <%= live_component @socket, McamServerWeb.CameraComponent,  camera: @camera, title_prefix: "Guest: " %>
+            <%= live_component @socket, McamServerWeb.CameraComponent,  camera: @camera, title_prefix: "Guest: ", live_action: @live_action %>
       </div>
+      <%= unless @live_action == :fullscreen do %>
       <div class="column-30 camera-side">
         <div class="row">
           <div class="column">
@@ -34,6 +47,7 @@ defmodule McamServerWeb.GuestCameraLive do
           </div>
         </div>
       </div>
+      <% end %>
     </div>
     """
   end
