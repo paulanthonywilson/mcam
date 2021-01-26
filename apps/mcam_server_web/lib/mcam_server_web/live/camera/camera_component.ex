@@ -25,6 +25,7 @@ defmodule McamServerWeb.CameraComponent do
          phx-click="toggle-fullscreen"
          data-binary-ws-url="<%= receive_images_websocket_url() %>"
          data-ws-token="<%= token(@camera) %>" ></img>
+    Click/touch image to toggle enlarging
     """
   end
 
