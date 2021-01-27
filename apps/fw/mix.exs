@@ -60,7 +60,6 @@ defmodule Fw.MixProject do
       {:cam_web, in_umbrella: true},
       {:camera, in_umbrella: true},
       {:configure, in_umbrella: true},
-      {:direct_image_sender, in_umbrella: true}
     ]
   end
 

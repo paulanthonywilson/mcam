@@ -1,6 +1,8 @@
 defmodule CamWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :cam_web
 
+  alias CamWeb.BinaryWs.DirectImageUrl
+
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
   # Set :encryption_salt if you would also like to encrypt it.
@@ -15,6 +17,8 @@ defmodule CamWeb.Endpoint do
     longpoll: false
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
+
+  socket DirectImageUrl.socket_path(), CamWeb.BinaryWs.DirectImageSocket, websocket: true
 
   # Serve at "/" the static files from "priv/static" directory.
   #

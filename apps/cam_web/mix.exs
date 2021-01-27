@@ -47,11 +47,10 @@ defmodule CamWeb.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
+      {:camera, in_umbrella: true},
       {:common, in_umbrella: true},
       {:configure, in_umbrella: true},
-      {:direct_image_sender, in_umbrella: true},
       {:server_comms, in_umbrella: true},
-      {:common, in_umbrella: true},
       {:phoenix_ecto, "~> 4.2"}
     ] ++ deps(Mix.target())
   end

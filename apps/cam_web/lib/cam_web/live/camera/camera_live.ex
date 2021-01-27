@@ -6,7 +6,7 @@ defmodule CamWeb.CameraLive do
   use CamWeb, :live_view
   alias CamWeb.{CameraSettingsComponent, RegistrationComponent, ServerConnectionComponent}
 
-  import DirectImageSender, only: [receive_images_websocket_url: 0]
+  import CamWeb.BinaryWs.DirectImageUrl, only: [receive_images_websocket_url: 1]
 
   def mount(_params, _session, socket) do
     Configure.subscribe()
@@ -39,7 +39,7 @@ defmodule CamWeb.CameraLive do
     <div class="row">
       <div class="column-75">
         <img id="cam-image" phx-hook="ImageHook"
-        data-binary-ws-url="<%= receive_images_websocket_url() %>"></img>
+        data-binary-ws-url="<%= receive_images_websocket_url(@socket) %>"></img>
       </div>
       <div class="column-20 camera-side">
         <div class="row">
