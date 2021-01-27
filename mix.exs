@@ -24,7 +24,7 @@ defmodule Mcam.MixProject do
   end
 
   defp releases do
-    apps = [:common, :image_streaming, :mcam_server, :mcam_server_web, :monitoring]
+    apps = [:common, :mcam_server, :mcam_server_web, :monitoring]
     [mcam: [applications: Enum.map(apps, &{&1, :permanent})]]
   end
 
