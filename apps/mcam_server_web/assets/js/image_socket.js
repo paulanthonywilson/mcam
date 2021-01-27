@@ -2,13 +2,12 @@ export class ImageSocket {
     constructor(img) {
         this.img = img;
         this.ws_url = img.dataset.binaryWsUrl;
-        this.token = img.dataset.wsToken;
     }
 
     connect() {
         console.log("connect");
         this.hasErrored = false;
-        this.socket = new WebSocket(`${this.ws_url}/${this.token}`);
+        this.socket = new WebSocket(this.ws_url);
         let that = this;
         this.socket.onopen = () => { that.onOpen(); }
         this.socket.onclose = () => { that.onClose(); }

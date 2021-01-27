@@ -87,6 +87,7 @@ defmodule ServerComms.Ws.WebsocketConnector do
     |> Application.fetch_env!(:server_ws)
     |> Path.join("raw_ws/camera_interface")
     |> Path.join(to_string(token))
+    |> Path.join("websocket")
   end
 
   defp change_connection_status(state, connection_status) do

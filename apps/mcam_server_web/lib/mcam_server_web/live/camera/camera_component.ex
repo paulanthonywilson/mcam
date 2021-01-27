@@ -23,16 +23,18 @@ defmodule McamServerWeb.CameraComponent do
     <img id="cam-image" phx-hook="ImageHook" src="<%= Routes.static_path(@socket, "/images/placeholder.jpeg")  %>"
           <%= if @live_action == :fullscreen, do: "class=fullscreen" %>
          phx-click="toggle-fullscreen"
-         data-binary-ws-url="<%= receive_images_websocket_url() %>"
+         data-binary-ws-url="<%= receive_images_websocket_url(@camera) %>"
          data-ws-token="<%= token(@camera) %>" ></img>
-    Click/touch image to toggle enlarging
+    <p>Click/touch image to toggle enlarging</p>
     """
   end
 
-  defp receive_images_websocket_url do
+  defp receive_images_websocket_url(camera) do
     :common
     |> Application.fetch_env!(:server_ws)
     |> Path.join("raw_ws/browser_interface")
+    |> Path.join(token(camera))
+    |> Path.join("websocket")
   end
 
   defp token(camera) do
