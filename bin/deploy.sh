@@ -28,5 +28,6 @@ CMD+=" ; cd ${release_dir} && tar zxvf ../${project}-${version}.tar.gz"
 remote_ex "$CMD"
 
 remote_ex "./${release_dir}/bin/${project} eval :migrate.up"
+remote_ex "sudo systemctl daemon-reload"
 remote_ex "sudo systemctl stop mcam"
 remote_ex "sudo systemctl enable --now mcam"

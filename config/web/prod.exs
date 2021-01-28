@@ -10,8 +10,11 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :mcam_server_web, McamServerWeb.Endpoint,
-url: [host: "mcam.iscodebaseonfire.com", scheme: "https", port: 443],
+  url: [host: "mcam.iscodebaseonfire.com", scheme: "https", port: 443],
   cache_static_manifest: "priv/static/cache_manifest.json",
+  http: [port: 80],
+  https: [port: 443],
+  force_ssl: [hsts: true],
   server: true
 
 config :mcam_server, McamServer.Repo, prepare: :unnamed
