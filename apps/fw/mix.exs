@@ -2,7 +2,7 @@ defmodule Fw.MixProject do
   use Mix.Project
 
   @app :fw
-  @version "0.1.0"
+  @version "0.1.1"
   @all_targets [:rpi, :rpi0, :rpi2, :rpi3, :rpi3a, :rpi4, :bbb, :osd32mp1, :x86_64]
 
   def project do
@@ -46,7 +46,7 @@ defmodule Fw.MixProject do
 
       # Dependencies for specific targets
       {:nerves_system_rpi, "~> 1.13", runtime: false, targets: :rpi},
-      {:nerves_system_rpi0, "~> 1.13", runtime: false, targets: :rpi0},
+      {:nerves_system_rpi0, "1.13.1", runtime: false, targets: :rpi0},
       {:nerves_system_rpi2, "~> 1.13", runtime: false, targets: :rpi2},
       {:nerves_system_rpi3, "~> 1.13", runtime: false, targets: :rpi3},
       {:nerves_system_rpi3a, "~> 1.13", runtime: false, targets: :rpi3a},
