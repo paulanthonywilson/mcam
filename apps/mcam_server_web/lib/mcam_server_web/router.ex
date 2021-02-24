@@ -3,10 +3,21 @@ defmodule McamServerWeb.Router do
 
   import McamServerWeb.UserAuth
 
-  @secure_browser_headers (case Mix.env() do
-                             :prod -> %{"content-security-policy" => "default-src 'self'"}
-                             _ -> %{}
-                           end)
+  @secure_browser_headers (
+                            host =
+                              :mcam_server_web
+                              |> Application.fetch_env!(McamServerWeb.Endpoint)
+                              |> Keyword.fetch!(:url)
+                              |> Keyword.fetch!(:host)
+
+                            case Mix.env() do
+                              :prod ->
+                                %{"content-security-policy" => "connect-src 'self' wss://#{host}"}
+
+                              _ ->
+                                %{}
+                            end
+                          )
 
   pipeline :browser do
     plug :accepts, ["html"]
