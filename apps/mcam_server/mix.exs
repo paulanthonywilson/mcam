@@ -36,7 +36,7 @@ defmodule McamServer.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:bamboo, "~> 1.6"},
+      {:bamboo, ">= 0.0.0"},
       {:bcrypt_elixir, "~> 2.0"},
       {:phoenix_pubsub, "~> 2.0"},
       {:ecto_sql, "~> 3.4"},
