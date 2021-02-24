@@ -3,13 +3,18 @@ defmodule McamServerWeb.Router do
 
   import McamServerWeb.UserAuth
 
+  @secure_browser_headers (case Mix.env() do
+                             :prod -> %{"content-security-policy" => "default-src 'self'"}
+                             _ -> %{}
+                           end)
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_live_flash
     plug :put_root_layout, {McamServerWeb.LayoutView, :root}
     plug :protect_from_forgery
-    plug :put_secure_browser_headers, %{"content-security-policy" => "default-src 'self'"}
+    plug :put_secure_browser_headers, @secure_browser_headers
     plug :fetch_current_user
   end
 

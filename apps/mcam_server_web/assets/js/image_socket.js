@@ -3,6 +3,9 @@ export class ImageSocket {
         this.img = img;
         this.ws_url = img.dataset.binaryWsUrl;
         this.token = img.dataset.wsToken;
+        this.imageUrl = this.img.src;
+        this.scheduleHeartBeat();
+     
     }
 
     connect() {
@@ -73,4 +76,18 @@ export class ImageSocket {
             if (this.isSocketClosed() && this.attemptReopen) this.connect();
         }, after);
     };
+
+    scheduleHeartBeat() {
+        let that = this;
+        this.heartBeatId = setTimeout(function () { that.sendHeartBeat(); }, 30000);
+    }
+
+    sendHeartBeat() {
+        if (this.socket) {
+            // Send a heartbeat message to the server to let it know
+            // we're still alive, avoiding timeout.
+            this.socket.send("💙");
+        }
+        this.scheduleHeartBeat();
+    }
 }
