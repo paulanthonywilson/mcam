@@ -5,7 +5,7 @@ export class ImageSocket {
         this.token = img.dataset.wsToken;
         this.imageUrl = this.img.src;
         this.scheduleHeartBeat();
-     
+
     }
 
     connect() {
@@ -60,8 +60,7 @@ export class ImageSocket {
         let oldImageUrl = this.img.src;
         let imageUrl = URL.createObjectURL(content);
         this.img.src = imageUrl;
-
-        if (oldImageUrl != "") {
+        if (oldImageUrl.startsWith("blob:")) {
             URL.revokeObjectURL(oldImageUrl);
         }
     }
