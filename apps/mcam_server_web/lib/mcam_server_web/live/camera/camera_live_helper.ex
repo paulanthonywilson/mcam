@@ -85,4 +85,11 @@ defmodule McamServerWeb.CameraLiveHelper do
      |> assign(:all_cameras, all_cameras)
      |> assign(:guest_cameras, guest_cameras)}
   end
+
+  def local_network_url(%{board_id: board_id}), do: local_network_url(board_id)
+
+  def local_network_url(board_id) do
+    host_part = String.slice(board_id, -4..-1)
+    "http://nerves-#{host_part}.local:4000"
+  end
 end

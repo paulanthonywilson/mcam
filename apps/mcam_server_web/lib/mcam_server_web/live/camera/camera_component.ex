@@ -4,6 +4,8 @@ defmodule McamServerWeb.CameraComponent do
   """
   use McamServerWeb, :live_component
 
+  import McamServerWeb.CameraLiveHelper, only: [local_network_url: 1]
+
   alias McamServer.Cameras
 
   def render(%{camera: :no_camera} = assigns) do
@@ -19,6 +21,7 @@ defmodule McamServerWeb.CameraComponent do
     ~L"""
     <%= unless @live_action == :fullscreen do %>
     <h2><%= @title_prefix %><%= @camera.name %> </h2>
+    <p><a href="<%= local_network_url(@camera) %>">Access on local network</a></p>
     <% end %>
     <img id="cam-image" phx-hook="ImageHook" src="<%= Routes.static_path(@socket, "/images/placeholder.jpeg")  %>"
           <%= if @live_action == :fullscreen, do: "class=fullscreen" %>

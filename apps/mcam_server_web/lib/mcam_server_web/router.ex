@@ -3,21 +3,22 @@ defmodule McamServerWeb.Router do
 
   import McamServerWeb.UserAuth
 
-  @secure_browser_headers (
-                            host =
-                              :mcam_server_web
-                              |> Application.fetch_env!(McamServerWeb.Endpoint)
-                              |> Keyword.fetch!(:url)
-                              |> Keyword.fetch!(:host)
+  host =
+    :mcam_server_web
+    |> Application.fetch_env!(McamServerWeb.Endpoint)
+    |> Keyword.fetch!(:url)
+    |> Keyword.fetch!(:host)
 
-                            case Mix.env() do
+  @content_security_policy (case(Mix.env()) do
                               :prod ->
-                                %{"content-security-policy" => "connect-src 'self' wss://#{host}"}
+                                "default-src 'self'; connect-src 'self' wss://#{host}; img-src 'self' blob:;"
 
                               _ ->
-                                %{}
-                            end
-                          )
+                                "default-src 'self' 'unsafe-eval' 'unsafe-inline';" <>
+                                  "connect-src 'self' ws://#{host}:*;" <>
+                                  "img-src 'self' blob: data:;" <>
+                                  "font-src data:;"
+                            end)
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -25,7 +26,7 @@ defmodule McamServerWeb.Router do
     plug :fetch_live_flash
     plug :put_root_layout, {McamServerWeb.LayoutView, :root}
     plug :protect_from_forgery
-    plug :put_secure_browser_headers, @secure_browser_headers
+    plug :put_secure_browser_headers, %{"content-security-policy" => @content_security_policy}
     plug :fetch_current_user
   end
 

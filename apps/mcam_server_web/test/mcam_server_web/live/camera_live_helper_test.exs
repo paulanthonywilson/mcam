@@ -215,4 +215,14 @@ defmodule McamServerWeb.CameraLiveHelperTest do
     assert :bad_email == CameraLiveHelper.basic_email_validate("bob@.com")
     assert :ok == CameraLiveHelper.basic_email_validate("bob@bob.abcd")
   end
+
+  test "local network url from board id" do
+    assert CameraLiveHelper.local_network_url("00000000352052e9") ==
+             "http://nerves-52e9.local:4000"
+
+    assert CameraLiveHelper.local_network_url("") == "http://nerves-.local:4000"
+
+    assert CameraLiveHelper.local_network_url(%{board_id: "00000000352052e9"}) ==
+             "http://nerves-52e9.local:4000"
+  end
 end

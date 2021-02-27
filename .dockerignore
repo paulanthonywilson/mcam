@@ -8,6 +8,8 @@ rel/artifacts
 **/priv/static
 **/node_modules
 
+config/fw
+
 apps/cam_web
 apps/camera
 apps/configure
