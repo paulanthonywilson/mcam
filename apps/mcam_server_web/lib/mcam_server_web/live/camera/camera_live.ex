@@ -66,7 +66,7 @@ defmodule McamServerWeb.CameraLive do
   def render(assigns) do
     ~L"""
     <%= if @live_action == :edit do %>
-      <%= live_modal @socket, EditItemFormComponent, camera: @camera, return_to: edit_return_path(@socket, @from_camera_id)  %>
+      <%= live_modal EditItemFormComponent, camera: @camera, return_to: edit_return_path(@socket, @from_camera_id)  %>
     <% end %>
     <div class="row">
       <div class="column column-70">

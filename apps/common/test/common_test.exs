@@ -2,7 +2,7 @@ defmodule CommonTest do
   use ExUnit.Case
   doctest Common
 
-  test "greets the world" do
-    assert Common.hello() == :world
+  test "own hostname_to_nerves_local_url/0" do
+    assert Common.hostname_to_nerves_local_url() =~ ~r/http:\/\/nerves-.+\.local:4000/
   end
 end

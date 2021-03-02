@@ -37,6 +37,9 @@ defmodule CamWeb.CameraLive do
     ~L"""
     <%= live_component @socket, ServerConnectionComponent, server_connection_status: @server_connection_status %>
     <div class="row">
+      <p class="column">Local network acccess url: <a href="<%= Common.hostname_to_nerves_local_url() %>"><%= Common.hostname_to_nerves_local_url() %> </a></p>
+    </div>
+    <div class="row">
       <div class="column-75">
         <img id="cam-image" phx-hook="ImageHook"
         data-binary-ws-url="<%= receive_images_websocket_url(@socket) %>"></img>

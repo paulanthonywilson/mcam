@@ -4,6 +4,10 @@ defmodule ServerComms.Identification.BoardId do
   if that is not found.
   """
 
+  @doc """
+  See moduledoc. The cpuinfo file defaults to `/proc/cpuinfo`. It can be passed in for testing purposes only.
+  """
+  @spec read_serial(String.t()) :: {:ok, String.t()}
   def read_serial(filename \\ "/proc/cpuinfo") do
     with {:ok, contents} <- File.read(filename),
          {:ok, serial} <- extract_serial(contents) do
