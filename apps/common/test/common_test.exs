@@ -3,6 +3,6 @@ defmodule CommonTest do
   doctest Common
 
   test "own hostname_to_nerves_local_url/0" do
-    assert Common.hostname_to_nerves_local_url() =~ ~r/http:\/\/nerves-.+\.local:4000/
+    assert Common.hostname_to_nerves_local_url() =~ ~r/http:\/\/.+\.local:4000/
   end
 end

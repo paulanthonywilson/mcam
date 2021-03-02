@@ -7,11 +7,11 @@ defmodule Common do
 
   eg
 
-  iex> Common.hostname_to_nerves_local_url("aax9")
+  iex> Common.hostname_to_nerves_local_url("nerves-aax9")
   "http://nerves-aax9.local:4000"
   """
   @spec hostname_to_nerves_local_url(String.t()) :: String.t()
-  def hostname_to_nerves_local_url(name), do: "http://nerves-#{name}.local:4000"
+  def hostname_to_nerves_local_url(name), do: "http://#{name}.local:4000"
 
   @doc """
   Uses `:inet.gethostname()` to get the hostname,

@@ -132,6 +132,9 @@ defmodule McamServerWeb.CameraLiveHelper do
   def local_network_url(board_id) do
     board_id
     |> String.slice(-4..-1)
+    |> prepend("nerves-")
     |> Common.hostname_to_nerves_local_url()
   end
+
+  defp prepend(str, pre), do: pre <> str
 end
