@@ -68,28 +68,16 @@ config :mdns_lite,
   # "nerves.local" for convenience. If more than one Nerves device is on the
   # network, delete "nerves" from the list.
 
-  host: [:hostname, "nerves"],
+  host: [:hostname, "merecam"],
   ttl: 120,
 
   # Advertise the following services over mDNS.
   services: [
     %{
-      name: "SSH Remote Login Protocol",
-      protocol: "ssh",
+      name: "Mere-cam local web",
+      protocol: "http",
       transport: "tcp",
-      port: 22
-    },
-    %{
-      name: "Secure File Transfer Protocol over SSH",
-      protocol: "sftp-ssh",
-      transport: "tcp",
-      port: 22
-    },
-    %{
-      name: "Erlang Port Mapper Daemon",
-      protocol: "epmd",
-      transport: "tcp",
-      port: 4369
+      port: 4000
     }
   ]
 
