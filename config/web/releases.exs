@@ -17,7 +17,9 @@ config :mcam_server, :browser_token,
 config :mcam_server_web, McamServerWeb.Endpoint,
   secret_key_base: System.fetch_env!("MCAM_SECRET_KEY_BASE"),
   live_view: [signing_salt: System.fetch_env!("MCAM_LIVE_SALT")],
-  https: [keyfile: System.fetch_env!("MCAM_SSL_KEY_PATH"), certfile: System.fetch_env!("MCAM_SSL_CERT_PATH")]
+  https: [keyfile: System.fetch_env!("MCAM_SSL_KEY_PATH"),
+          certfile: System.fetch_env!("MCAM_SSL_CERT_PATH"),
+          cacertfile: System.fetch_env!("MCAM_SSL_CACERT_PATH")]
 
 config :mcam_server, McamServer.Repo,
   url: System.get_env("MCAM_DATABASE_URL"),
