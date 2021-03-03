@@ -16,12 +16,11 @@ defmodule ServerComms.Application do
   def start(_type, _args) do
     children = [
       Supervisor.child_spec(
-        {ServerComms.Ws.Tick,
-         [timeout: @send_image_timeout, name: :server_comms_send_image_tick]},
+        {Common.Tick, [timeout: @send_image_timeout, name: :server_comms_send_image_tick]},
         id: :send_image_tick
       ),
       Supervisor.child_spec(
-        {ServerComms.Ws.Tick, [timeout: @long_restart, name: :server_comms_ws_long_restart]},
+        {Common.Tick, [timeout: @long_restart, name: :server_comms_ws_long_restart]},
         id: :long_restart
       ),
       ServerComms.Ws.WebsocketConnector

@@ -1,4 +1,4 @@
-defmodule ServerComms.Ws.Tick do
+defmodule Common.Tick do
   @moduledoc """
   Kill cord - times out and dies if not called within a timeout period.  Process linking / supervision
   can be used to cause the death of the other processs for a fresh start.

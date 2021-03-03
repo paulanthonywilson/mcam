@@ -19,10 +19,16 @@ defmodule Common do
   """
   @spec hostname_to_nerves_local_url() :: String.t()
   def hostname_to_nerves_local_url() do
+    hostname_to_nerves_local_url(hostname())
+  end
+
+  @doc """
+  Hostname (from `:inet.gethostname`) as a String
+  """
+  @spec hostname() :: String.t()
+  def hostname do
     with {:ok, name} <- :inet.gethostname() do
-      name
-      |> List.to_string()
-      |> hostname_to_nerves_local_url()
+      List.to_string(name)
     end
   end
 end

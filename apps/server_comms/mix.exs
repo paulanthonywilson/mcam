@@ -28,13 +28,14 @@ defmodule ServerComms.MixProject do
   defp deps do
     [
       {:httpoison, "~> 1.7"},
-      {:configure, in_umbrella: true},
-      {:camera, in_umbrella: true},
       {:jason, "~> 1.2"},
       # {:websocket_client, path: "~/dev/elixir-opensource/websocket_client"},
       {:websocket_client, github: "paulanthonywilson/websocket_client"},
       {:phoenix_pubsub, "~> 2.0"},
-      {:mox, "~> 1.0", only: :test}
+      {:mox, "~> 1.0", only: :test},
+      {:camera, in_umbrella: true},
+      {:configure, in_umbrella: true},
+      {:common, in_umbrella: true}
     ]
   end
 

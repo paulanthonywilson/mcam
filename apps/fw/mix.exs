@@ -59,7 +59,8 @@ defmodule Fw.MixProject do
       {:common, in_umbrella: true},
       {:cam_web, in_umbrella: true},
       {:camera, in_umbrella: true},
-      {:configure, in_umbrella: true}
+      {:configure, in_umbrella: true},
+      {:local_broadcast, in_umbrella: true}
     ]
   end
 

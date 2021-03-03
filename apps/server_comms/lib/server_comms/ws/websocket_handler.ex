@@ -12,7 +12,7 @@ defmodule ServerComms.Ws.WebsocketHandler do
 
   @behaviour :websocket_client_handler
 
-  alias ServerComms.Ws.Tick
+  alias Common.Tick
 
   require Logger
 
