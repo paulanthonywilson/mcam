@@ -1,6 +1,8 @@
 defmodule Common do
   @moduledoc false
 
+  @local_web_port 4000
+
   @doc """
   Given the hostname of a Nerves Mcam board, get the url that can be
   found through MDNS for directly connecting to the board on the local network.
@@ -11,7 +13,7 @@ defmodule Common do
   "http://nerves-aax9.local:4000"
   """
   @spec hostname_to_nerves_local_url(String.t()) :: String.t()
-  def hostname_to_nerves_local_url(name), do: "http://#{name}.local:4000"
+  def hostname_to_nerves_local_url(name), do: "http://#{name}.local:#{@local_web_port}"
 
   @doc """
   Uses `:inet.gethostname()` to get the hostname,
@@ -31,4 +33,6 @@ defmodule Common do
       List.to_string(name)
     end
   end
+
+  def local_web_port, do: @local_web_port
 end

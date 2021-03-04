@@ -1,5 +1,12 @@
 defmodule LocalBroadcast.Broadcaster do
+  @moduledoc """
+  Broadcasts the presence of this MCAM on the local network as
+  a UDP multicast every 15 seconds. Also listens for such broadcasts and
+  records them in the `LocalBroadcast.McamPeerRegisterEntry`
+  """
   use GenServer
+
+  alias LocalBroadcast.McamPeerRegistry
 
   require Logger
 
@@ -57,8 +64,13 @@ defmodule LocalBroadcast.Broadcaster do
     {:noreply, state}
   end
 
+  def handle_info({:udp, _, source_ip, _port, host}, state) do
+    McamPeerRegistry.record_peer(McamPeerRegistry, host, source_ip)
+    {:noreply, state}
+  end
+
   def handle_info(msg, state) do
-    Logger.info("Broadcast received: #{inspect(msg)}")
+    Logger.debug(fn -> "Unexpected message to #{__MODULE__}: #{inspect(msg)}" end)
     {:noreply, state}
   end
 end
