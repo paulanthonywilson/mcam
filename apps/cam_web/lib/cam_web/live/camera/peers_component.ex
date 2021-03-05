@@ -4,8 +4,14 @@ defmodule CamWeb.PeersComponent do
   """
   use CamWeb, :live_component
 
+  def render(%{peers: []} = assigns) do
+    ~L"""
+    """
+  end
+
   def render(assigns) do
     ~L"""
+      <h2>Peers</h2>
       <table class="mcam-peers">
         <thead>
           <th>Permanent access</th>

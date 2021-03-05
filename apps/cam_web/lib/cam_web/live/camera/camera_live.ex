@@ -90,8 +90,7 @@ defmodule CamWeb.CameraLive do
     </div>
     <div class="row"">
       <div class="column">
-         <h2>Peers</h2>
-            <%= live_component @socket, PeersComponent, peers: @peers %>
+          <%= live_component @socket, PeersComponent, peers: @peers %>
        </div>
     </div>
     """
