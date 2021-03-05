@@ -2,10 +2,21 @@ defmodule LocalBroadcast.Broadcaster do
   @moduledoc """
   Broadcasts the presence of this MCAM on the local network as
   a UDP multicast every 15 seconds. Also listens for such broadcasts and
-  records them in the `LocalBroadcast.McamPeerRegisterEntry`
+  records them in the `LocalBroadcast.McamPeerRegisterEntry`.
+
+
+  There seems to be an occasional issue with the socket not receiving messages, probably connected with the
+  timings of the `wlan0` interface coming up. Could probably address with with subscriptions to `VintageNet`
+  or something but in my experience this is too much of a faff.
+
+  Instead we use `Common.Tick` to restart if no message has been received within 35 seconds.
+  There should be messages as the UDP is set to loop, meaning our outgoing messages will also be received if the interface is up.
+
+  See `LocalBroadcast.BroadcasterSupervisor` for how it's set up
   """
   use GenServer
 
+  alias Common.Tick
   alias LocalBroadcast.McamPeerRegistry
 
   require Logger
@@ -20,13 +31,17 @@ defmodule LocalBroadcast.Broadcaster do
          end)
   @broadcast_inverval 15_000
 
+
   @local_interface {0, 0, 0, 0}
 
   @active_count 10
 
   @message_prefix "mcam:"
 
-  defstruct socket: nil
+  keys = [:socket]
+  @enforce_keys keys
+  defstruct keys
+  @type t :: %__MODULE__{socket: :inet.socket()}
 
   def start_link(opts) do
     GenServer.start_link(__MODULE__, {}, opts)
@@ -38,8 +53,8 @@ defmodule LocalBroadcast.Broadcaster do
       active: @active_count,
       add_membership: {@ip, @local_interface},
       multicast_if: @local_interface,
-      multicast_loop: false,
-      multicast_ttl: 1,
+      multicast_loop: true,
+      multicast_ttl: 5,
       reuseaddr: true
     ]
 
@@ -64,8 +79,9 @@ defmodule LocalBroadcast.Broadcaster do
     {:noreply, state}
   end
 
-  def handle_info({:udp, _, source_ip, _port, host}, state) do
-    McamPeerRegistry.record_peer(McamPeerRegistry, host, source_ip)
+  def handle_info({:udp, _, source_ip, _port, "mcam:" <> host}, state) do
+    Tick.tick(:local_broadcast_peers_tick)
+    if host != Common.hostname(), do: McamPeerRegistry.record_peer(McamPeerRegistry, host, source_ip)
     {:noreply, state}
   end
 

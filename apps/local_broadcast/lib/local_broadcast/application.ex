@@ -9,12 +9,12 @@ defmodule LocalBroadcast.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      {LocalBroadcast.Broadcaster, [name: LocalBroadcast.Broadcaster]},
       LocalBroadcast.McamPeerRegistryEntrySupervisor,
       {Registry, keys: :duplicate, name: @peer_broadcaster_name},
       {Registry, keys: :unique, name: @mcam_peer_registry_name},
       {LocalBroadcast.McamPeerRegistry,
-       registry_name: @mcam_peer_registry_name, name: LocalBroadcast.McamPeerRegistry}
+       registry_name: @mcam_peer_registry_name, name: LocalBroadcast.McamPeerRegistry},
+      LocalBroadcast.BroadcasterSupervisor
     ]
 
     opts = [strategy: :one_for_one, name: LocalBroadcast.Supervisor]

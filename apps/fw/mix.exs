@@ -47,6 +47,7 @@ defmodule Fw.MixProject do
       # Dependencies for specific targets
       {:nerves_system_rpi, "~> 1.13", runtime: false, targets: :rpi},
       {:nerves_system_rpi0, "~> 1.13", runtime: false, targets: :rpi0},
+      {:recon, "~> 2.5"},
       # {:nerves_system_rpi2, "~> 1.13", runtime: false, targets: :rpi2},
       # {:nerves_system_rpi3, "~> 1.13", runtime: false, targets: :rpi3},
       # {:nerves_system_rpi3a, "~> 1.13", runtime: false, targets: :rpi3a},

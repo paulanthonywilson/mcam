@@ -4,7 +4,13 @@ defmodule CamWeb.CameraLive do
   as settings and registration.
   """
   use CamWeb, :live_view
-  alias CamWeb.{CameraSettingsComponent, RegistrationComponent, ServerConnectionComponent}
+
+  alias CamWeb.{
+    CameraSettingsComponent,
+    PeersComponent,
+    RegistrationComponent,
+    ServerConnectionComponent
+  }
 
   import CamWeb.BinaryWs.DirectImageUrl, only: [receive_images_websocket_url: 1]
 
@@ -12,9 +18,14 @@ defmodule CamWeb.CameraLive do
     Configure.subscribe()
     settings = Enum.into(Configure.all_settings(), [])
     :ok = ServerComms.subscribe()
+    :ok = LocalBroadcast.subscribe()
 
     {:ok,
-     assign(socket, settings: settings, server_connection_status: ServerComms.connection_status())}
+     assign(socket,
+       settings: settings,
+       server_connection_status: ServerComms.connection_status(),
+       peers: LocalBroadcast.peers()
+     )}
   end
 
   def handle_info({:updated_config, key, value}, socket) do
@@ -24,6 +35,26 @@ defmodule CamWeb.CameraLive do
 
   def handle_info({:server_connection_status_changed, connection_status}, socket) do
     {:noreply, assign(socket, server_connection_status: connection_status)}
+  end
+
+  def handle_info({:mcam_peer_registry, :removed, host}, %{assigns: %{peers: peers}} = socket) do
+    peers = remove_host_from_peers(peers, host)
+    {:noreply, assign(socket, peers: peers)}
+  end
+
+  def handle_info(
+        {:mcam_peer_registry, :update, {host, _, _} = peer},
+        %{assigns: %{peers: peers}} = socket
+      ) do
+    peers = [peer | remove_host_from_peers(peers, host)]
+    {:noreply, assign(socket, peers: peers)}
+  end
+
+  defp remove_host_from_peers(peers, host) do
+    Enum.reject(peers, fn
+      {^host, _, _} -> true
+      _ -> false
+    end)
   end
 
   defp update_setting(socket, key, value) do
@@ -56,6 +87,12 @@ defmodule CamWeb.CameraLive do
           </div>
         </div>
       </div>
+    </div>
+    <div class="row"">
+      <div class="column">
+         <h2>Peers</h2>
+            <%= live_component @socket, PeersComponent, peers: @peers %>
+       </div>
     </div>
     """
   end

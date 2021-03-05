@@ -9,7 +9,7 @@ defmodule LocalBroadcast.McamPeerRegistryEntry do
 
   @local_web_port Common.local_web_port()
 
-  @timeout 70_000
+  @timeout 50_000
 
   def start_link({_registry_name, _hostname, _ip4_addr} = args) do
     GenServer.start_link(__MODULE__, args)

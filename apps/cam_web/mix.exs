@@ -46,12 +46,13 @@ defmodule CamWeb.MixProject do
       {:telemetry_poller, "~> 0.4"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
+      {:phoenix_ecto, "~> 4.2"},
       {:plug_cowboy, "~> 2.0"},
       {:camera, in_umbrella: true},
       {:common, in_umbrella: true},
       {:configure, in_umbrella: true},
       {:server_comms, in_umbrella: true},
-      {:phoenix_ecto, "~> 4.2"}
+      {:local_broadcast, in_umbrella: true}
     ] ++ deps(Mix.target())
   end
 

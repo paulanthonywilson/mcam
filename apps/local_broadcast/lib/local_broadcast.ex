@@ -19,6 +19,7 @@ defmodule LocalBroadcast do
   List currently seen local peers on the network. Takes the form:any()
 
   ```
+  [{"nerves-gg8f", "http://nerves-gg8f.local:4000", "http://10.1.2.4:4000"}]
   ```
   """
   def peers do
