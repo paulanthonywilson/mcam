@@ -31,7 +31,6 @@ defmodule LocalBroadcast.Broadcaster do
          end)
   @broadcast_inverval 15_000
 
-
   @local_interface {0, 0, 0, 0}
 
   @active_count 10
@@ -81,7 +80,11 @@ defmodule LocalBroadcast.Broadcaster do
 
   def handle_info({:udp, _, source_ip, _port, "mcam:" <> host}, state) do
     Tick.tick(:local_broadcast_peers_tick)
-    if host != Common.hostname(), do: McamPeerRegistry.record_peer(McamPeerRegistry, host, source_ip)
+
+    if host != Common.hostname() do
+      McamPeerRegistry.record_peer(McamPeerRegistry, host, source_ip)
+    end
+
     {:noreply, state}
   end
 
