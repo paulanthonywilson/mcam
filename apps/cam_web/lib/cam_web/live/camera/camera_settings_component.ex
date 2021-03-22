@@ -4,6 +4,8 @@ defmodule CamWeb.CameraSettingsComponent do
   """
   use CamWeb, :live_component
 
+  alias CamWeb.CameraSettingSelectComponent
+
   @rotation_options [0, 90, 180, 270]
   @img_effect_options [:none | Enum.sort(~w(
     negative
@@ -41,26 +43,29 @@ defmodule CamWeb.CameraSettingsComponent do
 
   def render(assigns) do
     ~L"""
-    <form phx-change="change-camera-rotation" phx-target="<%=@myself%>" class="camera-settings">
-    <label for="camera-rotation">Rotation</label>
-    <select name="camera-rotation">
-      <%= options_for_select(rotation_options(), @camera_rotation) %>
-    </select>
-    </form>
+    <%= live_component @socket,
+      CameraSettingSelectComponent,
+      label: "Rotation",
+      options: rotation_options(),
+      setting: "camera-rotation",
+      current: @camera_rotation,
+      target: @myself %>
 
-    <form phx-change="change-img-effect" phx-target="<%=@myself%>" class="camera-settings">
-    <label for="camera-img-effect">Image Effect</label>
-    <select name="camera-img-effect">
-      <%= options_for_select(img_effect_options(), @camera_img_effect) %>
-    </select>
-    </form>
+    <%= live_component @socket,
+      CameraSettingSelectComponent,
+      label: "Image Effect",
+      options: img_effect_options(),
+      current: @camera_img_effect,
+      setting: "img-effect",
+      target: @myself %>
 
-    <form phx-change="change-exposure-mode" phx-target="<%=@myself%>" class="camera-settings">
-    <label for="camera-exposure-mode">Exposure mode</label>
-    <select name="camera-exposure-mode">
-      <%= options_for_select(exposure_modes(), @camera_exposure_mode) %>
-    </select>
-    </form>
+    <%= live_component @socket,
+      CameraSettingSelectComponent,
+      label: "Exposure mode",
+      options: exposure_modes(),
+      current: @camera_exposure_mode,
+      setting: "exposure-mode",
+      target: @myself %>
     """
   end
 
@@ -69,13 +74,17 @@ defmodule CamWeb.CameraSettingsComponent do
     {:noreply, socket}
   end
 
-  def handle_event("change-img-effect", %{"camera-img-effect" => effect}, socket) do
+  def handle_event("change-img-effect", %{"img-effect" => effect}, socket) do
     Configure.set_camera_img_effect(String.to_existing_atom(effect))
     {:noreply, socket}
   end
 
-  def handle_event("change-exposure-mode", %{"camera-exposure-mode" => mode}, socket) do
+  def handle_event("change-exposure-mode", %{"exposure-mode" => mode}, socket) do
     Configure.set_camera_exposure_mode(String.to_existing_atom(mode))
+    {:noreply, socket}
+  end
+
+  def handle_event("ignore-settings-recover", _params, socket) do
     {:noreply, socket}
   end
 
