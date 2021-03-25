@@ -4,6 +4,7 @@ defmodule McamServer.AccountsTest do
   alias McamServer.Accounts
   import McamServer.AccountsFixtures
   alias McamServer.Accounts.{User, UserToken}
+  alias McamServer.Subscriptions
 
   describe "get_user_by_email/1" do
     test "does not return the user if the email does not exist" do
@@ -90,6 +91,19 @@ defmodule McamServer.AccountsTest do
       assert is_binary(user.hashed_password)
       assert is_nil(user.confirmed_at)
       assert is_nil(user.password)
+    end
+
+    test "sets the user on the alpha plan if, and only if, there are less than 15 registered users" do
+      for _ <- 1..14, do: user_fixture()
+
+      {:ok, alpha_plan_user} =
+        Accounts.register_user(%{email: unique_user_email(), password: valid_user_password()})
+
+      {:ok, out_of_luck_user} =
+        Accounts.register_user(%{email: unique_user_email(), password: valid_user_password()})
+
+      assert {:alpha, _} = Subscriptions.camera_quota(alpha_plan_user)
+      assert {:none, _} = Subscriptions.camera_quota(out_of_luck_user)
     end
   end
 

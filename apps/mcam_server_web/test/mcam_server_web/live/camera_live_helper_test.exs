@@ -176,9 +176,24 @@ defmodule McamServerWeb.CameraLiveHelperTest do
                CameraLiveHelper.mount_camera(%{}, session, %Socket{})
     end
 
+    test "counts the user's cameras", %{session: session, user_cameras: user_cameras} do
+      assert {:ok, %{assigns: %{all_camera_count: camera_count}}} =
+               CameraLiveHelper.mount_camera(%{}, session, %Socket{})
+
+      assert camera_count == length(user_cameras)
+    end
+
     test "assigns guest cameras", %{session: session, guest_cameras: guest_cameras} do
       assert {:ok, %{assigns: %{guest_cameras: ^guest_cameras}}} =
                CameraLiveHelper.mount_camera(%{}, session, %Socket{})
+    end
+
+    test "assigns subscription quota and type", %{session: session} do
+      assert {:ok, %{assigns: %{camera_quota: quota, subscription_plan: subscription_plan}}} =
+               CameraLiveHelper.mount_camera(%{}, session, %Socket{})
+
+      assert is_atom(subscription_plan)
+      assert is_integer(quota)
     end
 
     test "subscribes to user camera name changes", %{session: session, user_cameras: [camera | _]} do

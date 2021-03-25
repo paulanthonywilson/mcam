@@ -4,6 +4,8 @@ defmodule McamServer.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{}
+
   @derive {Inspect, except: [:password]}
   schema "users" do
     field :email, :string

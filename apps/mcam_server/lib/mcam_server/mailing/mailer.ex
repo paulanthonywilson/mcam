@@ -4,6 +4,8 @@ defmodule McamServer.Mailing.Mailer do
   """
   use Bamboo.Mailer, otp_app: :mcam_server
 
+  @dialyzer {:nowarn_function, deliver_later: 1}
+
   import Bamboo.Email, only: [new_email: 1]
 
   def deliver(to, subject, body) do

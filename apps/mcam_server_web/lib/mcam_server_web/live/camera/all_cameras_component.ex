@@ -23,6 +23,7 @@ defmodule McamServerWeb.AllCamerasComponent do
       </li>
     <% end %>
     </ul>
+    <p><%=  "#{@all_camera_count} out of #{@camera_quota} with #{@subscription_plan} plan" %></p>
     """
   end
 end

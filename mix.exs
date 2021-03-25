@@ -19,7 +19,8 @@ defmodule Mcam.MixProject do
   # Run "mix help deps" for examples and options.
   defp deps do
     [
-      {:credo, "~> 1.5", only: [:dev, :test]}
+      {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.1", only: [:dev, :test], runtime: false}
     ]
   end
 

@@ -5,7 +5,7 @@ defmodule McamServerWeb.CameraLiveHelper do
 
   import Phoenix.LiveView.Utils, only: [assign: 3]
 
-  alias McamServer.{Accounts, Cameras, Cameras.Camera}
+  alias McamServer.{Accounts, Cameras, Cameras.Camera, Subscriptions}
   alias Phoenix.LiveView.Socket
 
   @doc """
@@ -116,6 +116,7 @@ defmodule McamServerWeb.CameraLiveHelper do
     user = Accounts.get_user_by_session_token(user_token)
     all_cameras = Cameras.user_cameras(user)
     guest_cameras = Cameras.guest_cameras(user)
+    {subscription_plan, camera_quota} = Subscriptions.camera_quota(user)
     Cameras.subscribe_to_registrations(user)
 
     for cam <- all_cameras ++ guest_cameras, do: Cameras.subscribe_to_name_change(cam)
@@ -123,7 +124,10 @@ defmodule McamServerWeb.CameraLiveHelper do
     {:ok,
      socket
      |> assign(:user, user)
+     |> assign(:camera_quota, camera_quota)
+     |> assign(:subscription_plan, subscription_plan)
      |> assign(:all_cameras, all_cameras)
+     |> assign(:all_camera_count, length(all_cameras))
      |> assign(:guest_cameras, guest_cameras)}
   end
 

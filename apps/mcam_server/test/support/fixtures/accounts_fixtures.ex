@@ -23,6 +23,11 @@ defmodule McamServer.AccountsFixtures do
     end
   end
 
+  def user_without_subscription(attrs \\ %{}) do
+    for _ <- 1..15, do: user_fixture()
+    user_fixture(attrs)
+  end
+
   defp maybe_confirm(user, %{confirm?: true}) do
     user
     |> User.confirm_changeset()

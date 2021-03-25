@@ -6,6 +6,7 @@ defmodule McamServer.Accounts do
   import Ecto.Query, warn: false
   alias McamServer.Repo
   alias McamServer.Accounts.{User, UserToken, UserNotifier}
+  alias McamServer.Subscriptions
 
   ## Database getters
 
@@ -77,6 +78,18 @@ defmodule McamServer.Accounts do
     %User{}
     |> User.registration_changeset(attrs)
     |> Repo.insert()
+    |> maybe_subscribe_to_plan()
+  end
+
+  defp maybe_subscribe_to_plan({:ok, user}) do
+    if user_count() < 16, do: :ok = Subscriptions.set_subscription(user, :alpha)
+    {:ok, user}
+  end
+
+  defp maybe_subscribe_to_plan(err), do: err
+
+  defp user_count() do
+    Repo.one(from u in User, select: count(u.id))
   end
 
   @doc """

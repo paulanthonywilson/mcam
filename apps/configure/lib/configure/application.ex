@@ -23,7 +23,7 @@ defmodule Configure.Application do
 
   def should_start_home_hotspot? do
     with true <- function_exported?(VintageNet.Persistence, :call, 2),
-         {:error, _} <- VintageNet.Persistence.call(:load, ["wlan0"]) do
+         {:error, _} <- apply(VintageNet.Persistence, :call, [:load, ["wlan0"]]) do
       true
     else
       _ -> false

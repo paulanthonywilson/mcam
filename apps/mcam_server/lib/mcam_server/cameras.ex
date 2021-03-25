@@ -16,7 +16,7 @@ defmodule McamServer.Cameras do
   @doc """
   Registers a camera to a a user
   """
-  @spec register(Strint.t(), String.t(), String.t()) ::
+  @spec register(String.t(), String.t(), String.t()) ::
           {:ok, Camera.t()} | {:error, :authentication_failure} | {:error, Ecto.Changeset.t()}
   def register(owner_email, owner_password, board_id) do
     case Accounts.get_user_by_email_and_password(owner_email, owner_password) do
