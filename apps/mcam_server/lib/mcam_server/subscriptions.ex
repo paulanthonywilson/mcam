@@ -10,7 +10,16 @@ defmodule McamServer.Subscriptions do
 
   import Ecto.Query
 
+  @alpha_quota (case Mix.env() do
+                  :test -> 20
+                  _ -> 2
+                end)
+
   def camera_quota(%User{id: user_id}) do
+    camera_quota(user_id)
+  end
+
+  def camera_quota(user_id) do
     user_id
     |> get_subscription()
     |> do_camera_quota()
@@ -30,7 +39,11 @@ defmodule McamServer.Subscriptions do
 
   def set_subscription(%User{id: user_id}, :alpha) do
     case %Subscription{}
-         |> Subscription.changeset(%{user_id: user_id, camera_quota: 2, reference: "alpha"})
+         |> Subscription.changeset(%{
+           user_id: user_id,
+           camera_quota: @alpha_quota,
+           reference: "alpha"
+         })
          |> Repo.insert() do
       {:ok, _subscription} ->
         :ok
@@ -38,7 +51,7 @@ defmodule McamServer.Subscriptions do
       {:error, _} ->
         user_id
         |> get_subscription()
-        |> Subscription.changeset(%{reference: "alpha", camera_quota: 2})
+        |> Subscription.changeset(%{reference: "alpha", camera_quota: @alpha_quota})
         |> Repo.update!()
     end
   end

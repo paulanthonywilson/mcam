@@ -23,6 +23,11 @@ defmodule McamServerWeb.Camera.CameraRegistrationController do
         |> put_status(401)
         |> json("nope")
 
+      {:error, :quota_exceeded} ->
+        conn
+        |> put_status(402)
+        |> json("quota_exceeded")
+
       err ->
         Logger.error("Error registering camera: #{inspect(err)}")
 

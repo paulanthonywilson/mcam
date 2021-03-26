@@ -48,5 +48,23 @@ defmodule ServerComms.ApiTest do
       assert {:error, _} = Api.register("bobfailure@bob.com", "iambob", "camera42")
       refute_receive {:fake_setting_set, :email, "bobsuccess@bob.com"}
     end
+
+    test "authentication failure" do
+      MockRequest
+      |> expect(:post, 1, fn _url, _body, _headers, _opts ->
+        {:ok, %HTTPoison.Response{status_code: 401, body: ""}}
+      end)
+
+      assert {:error, :authentication} == Api.register("bob@bob.com", "nope", "cam1")
+    end
+
+    test "quota exceeded" do
+      MockRequest
+      |> expect(:post, 1, fn _url, _body, _headers, _opts ->
+        {:ok, %HTTPoison.Response{status_code: 402, body: ""}}
+      end)
+
+      assert {:error, :quota_exceeded} == Api.register("bob@bob.com", "nope", "cam1")
+    end
   end
 end

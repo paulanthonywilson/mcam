@@ -63,8 +63,12 @@ defmodule CamWeb.RegistrationComponent do
       :ok ->
         put_flash(socket, :info, "Registered")
 
+        {:error, :authentication} ->
+          put_flash(socket, :error, "Your username and/or password were not liked")
+        {:error, :quota_exceeded} ->
+          put_flash(socket, :error, "You have run out of your camera quota")
       _ ->
-        put_flash(socket, :error, "Registration failed")
+        put_flash(socket, :error, "Registration failed for unknown reasons")
     end
   end
 

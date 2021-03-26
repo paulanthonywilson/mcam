@@ -2,7 +2,7 @@ defmodule McamServerWeb.Camera.CameraRegistrationControllerTest do
   use McamServerWeb.ConnCase, async: true
   import McamServer.AccountsFixtures
 
-  alias McamServer.Cameras
+  alias McamServer.{Cameras, Subscriptions}
 
   setup do
     %{user: user_fixture(email: "bob@mavis.com", password: "marvinmarvinmarvin")}
@@ -30,6 +30,23 @@ defmodule McamServerWeb.Camera.CameraRegistrationControllerTest do
       })
 
     assert json_response(conn, 401)
+  end
+
+  test "quota_exceeded", %{user: user, conn: conn} do
+    {_, quota} = Subscriptions.camera_quota(user)
+
+    for i <- 1..quota do
+      {:ok, _} = Cameras.register("bob@mavis.com", "marvinmarvinmarvin", "r#{i}d#{i}")
+    end
+
+    conn =
+      post(conn, Routes.camera_registration_path(conn, :create), %{
+        email: "bob@mavis.com",
+        password: "marvinmarvinmarvin",
+        board_id: "c3p0"
+      })
+
+    assert json_response(conn, 402)
   end
 
   test "400 response without the required params", %{conn: conn} do

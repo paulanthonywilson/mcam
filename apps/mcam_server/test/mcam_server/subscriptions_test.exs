@@ -12,15 +12,15 @@ defmodule McamServer.SubscriptionsTest do
   test "a user with an alpha subscription has a 3 camera quota" do
     user = user_fixture()
     Subscriptions.set_subscription(user, :alpha)
-    assert Subscriptions.camera_quota(user) == {:alpha, 2}
+    assert Subscriptions.camera_quota(user) == {:alpha, 20}
   end
 
   test "updating a subscription" do
     user = user_without_subscription()
 
-    Repo.insert!(%Subscription{user_id: user.id, reference: "epsilon", camera_quota: 20})
+    Repo.insert!(%Subscription{user_id: user.id, reference: "epsilon", camera_quota: 120})
 
     Subscriptions.set_subscription(user, :alpha)
-    assert Subscriptions.camera_quota(user) == {:alpha, 2}
+    assert Subscriptions.camera_quota(user) == {:alpha, 20}
   end
 end

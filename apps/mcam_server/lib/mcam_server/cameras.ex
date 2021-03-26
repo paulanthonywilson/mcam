@@ -8,6 +8,7 @@ defmodule McamServer.Cameras do
   alias McamServer.{Accounts, Repo}
   alias McamServer.Accounts.User
   alias McamServer.Cameras.{Camera, GuestCamera}
+  alias McamServer.Subscriptions
   alias McamServer.Tokens
   alias Phoenix.PubSub
 
@@ -19,17 +20,27 @@ defmodule McamServer.Cameras do
   @spec register(String.t(), String.t(), String.t()) ::
           {:ok, Camera.t()} | {:error, :authentication_failure} | {:error, Ecto.Changeset.t()}
   def register(owner_email, owner_password, board_id) do
-    case Accounts.get_user_by_email_and_password(owner_email, owner_password) do
-      %{id: user_id} ->
-        %Camera{owner_id: user_id}
-        |> Camera.changeset(%{board_id: board_id, name: board_id})
-        |> Repo.insert()
-        |> maybe_broadcast_registration()
-        |> maybe_retrieve_original_if_duplicate({user_id, board_id})
-
-      _ ->
+    with {:user, %{id: user_id}} <-
+           {:user, Accounts.get_user_by_email_and_password(owner_email, owner_password)},
+         owned_already <- owned_camera_count(user_id),
+         {_, quota} = Subscriptions.camera_quota(user_id),
+         {:quota, true} <- {:quota, owned_already < quota} do
+      %Camera{owner_id: user_id}
+      |> Camera.changeset(%{board_id: board_id, name: board_id})
+      |> Repo.insert()
+      |> maybe_broadcast_registration()
+      |> maybe_retrieve_original_if_duplicate({user_id, board_id})
+    else
+      {:user, _} ->
         {:error, :authentication_failure}
+
+      {:quota, _} ->
+        {:error, :quota_exceeded}
     end
+  end
+
+  defp owned_camera_count(user_id) do
+    Repo.one(from c in Camera, where: c.owner_id == ^user_id, select: count(c.id))
   end
 
   defp maybe_retrieve_original_if_duplicate({:ok, _} = res, _), do: res

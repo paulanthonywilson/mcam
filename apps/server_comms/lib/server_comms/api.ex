@@ -30,9 +30,13 @@ defmodule ServerComms.Api do
     else
       err ->
         Logger.info(fn -> "Failed registration: #{inspect(err)}" end)
-        {:error, "registration failed"}
+        registration_error(err) |> IO.inspect(label: :register_error)
     end
   end
+
+  defp registration_error({:ok, %{status_code: 401}}), do: {:error, :authentication}
+  defp registration_error({:ok, %{status_code: 402}}), do: {:error, :quota_exceeded}
+  defp registration_error(_), do: {:error, "registration failed"}
 
   @doc """
   See `Configure.register/2`

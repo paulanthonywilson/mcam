@@ -1,7 +1,7 @@
 defmodule McamServer.CamerasTest do
   use McamServer.DataCase, async: true
 
-  alias McamServer.{AccountsFixtures, CamerasFixtures, Cameras, Cameras.Camera}
+  alias McamServer.{AccountsFixtures, CamerasFixtures, Cameras, Cameras.Camera, Subscriptions}
 
   setup do
     user = AccountsFixtures.user_fixture(%{email: "bob@bob.com", password: "hellomateyboy"})
@@ -44,6 +44,17 @@ defmodule McamServer.CamerasTest do
       {:ok, %Camera{id: camera_id2}} = Cameras.register("bob@bob.com", "hellomateyboy", "c3p0")
 
       assert camera_id1 != camera_id2
+    end
+
+    test "registering over quota", %{user: user} do
+      {_, quota} = Subscriptions.camera_quota(user)
+
+      for _ <- 1..quota do
+        {:ok, _} = Cameras.register("bob@bob.com", "hellomateyboy", "x#{System.unique_integer()}")
+      end
+
+      assert {:error, :quota_exceeded} ==
+               Cameras.register("bob@bob.com", "hellomateyboy", "busted")
     end
 
     test "registing the same board id with a different user is treated like separate cameras" do
