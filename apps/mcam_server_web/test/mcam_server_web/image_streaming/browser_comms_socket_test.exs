@@ -24,7 +24,17 @@ defmodule ImageStreaming.BrowserCommsSocketTest do
     end
 
     test "expired token" do
-      assert :error == BrowserCommsSocket.connect(req(expired_token()))
+      assert {:ok, :expired_token} == BrowserCommsSocket.connect(req(expired_token()))
+      assert {:ok, :expired_token} == BrowserCommsSocket.init(:expired_token)
+      assert_received :expired_token
+
+      assert {:push, {:text, "expired_token"}, :expired_token} ==
+               BrowserCommsSocket.handle_info(:expired_token, :expired_token)
+
+      assert_received :close_socket
+
+      assert {:stop, :closed, :expired_token} ==
+               BrowserCommsSocket.handle_info(:close_socket, :expired_token)
     end
 
     test "token for camera that is no longer there" do

@@ -21,6 +21,9 @@ defmodule McamServerWeb.ImageStreaming.BrowserCommsSocket do
       {:ok, %{id: camera_id}} ->
         {:ok, %{camera_id: camera_id}}
 
+      {:error, :expired} ->
+        {:ok, :expired_token}
+
       _err ->
         :error
     end
@@ -31,6 +34,11 @@ defmodule McamServerWeb.ImageStreaming.BrowserCommsSocket do
     send(self(), :refresh_token)
     Cameras.subscribe_to_camera(camera_id)
     {:ok, state}
+  end
+
+  def init(:expired_token) do
+    send(self(), :expired_token)
+    {:ok, :expired_token}
   end
 
   @impl true
@@ -47,6 +55,15 @@ defmodule McamServerWeb.ImageStreaming.BrowserCommsSocket do
     Process.send_after(self(), :refresh_token, @token_refresh_period)
     token = Cameras.token_for(camera_id, :browser)
     {:push, {:text, "token:" <> token}, state}
+  end
+
+  def handle_info(:expired_token, state) do
+    send(self(), :close_socket)
+    {:push, {:text, "expired_token"}, state}
+  end
+
+  def handle_info(:close_socket, state) do
+    {:stop, :closed, state}
   end
 
   def handle_info(_, state) do

@@ -5,7 +5,6 @@ export class ImageSocket {
         this.token = img.dataset.wsToken;
         this.imageUrl = this.img.src;
         this.scheduleHeartBeat();
-
     }
 
     connect() {
@@ -49,7 +48,10 @@ export class ImageSocket {
     }
 
     stringMessage(content) {
-        if (content.startsWith("token:")) {
+        if (content == "expired_token") {
+            console.log("expired");
+            window.location.reload()
+        } else if (content.startsWith("token:")) {
             console.log("token refresh");
             this.token = content.slice(6);
         }

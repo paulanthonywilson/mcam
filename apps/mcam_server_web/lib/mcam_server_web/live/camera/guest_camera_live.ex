@@ -38,7 +38,11 @@ defmodule McamServerWeb.GuestCameraLive do
       <div class="column-30 camera-side">
         <div class="row">
           <div class="column">
-            <%= live_component @socket, McamServerWeb.AllCamerasComponent, all_cameras: @all_cameras, camera: @camera %>
+          <%= live_component @socket, McamServerWeb.AllCamerasComponent, all_cameras: @all_cameras,
+                                                                         camera: @camera,
+                                                                         all_camera_count: @all_camera_count,
+                                                                         subscription_plan: @subscription_plan,
+                                                                         camera_quota: @camera_quota %>
           </div>
         </div>
         <div class="row">
