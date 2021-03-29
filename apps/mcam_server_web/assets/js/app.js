@@ -28,13 +28,14 @@ Hooks.ImageHook = {
         this.socket = imageSocket;
     },
     disconnected() {
-        this.reloadPageTimer = setInterval(function () {
-            console.log("reloading");
-            window.location.reload();
-        }, 3 * 60 * 1000);
+        // this.reloadPageTimer = setInterval(function () {
+        //     console.log("reloading");
+        //     window.location.reload();
+        // }, 3 * 60 * 1000);
+        console.log("LiveView disconnected");
     },
     reconnected() {
-        clearTimeout(this.reloadPageTimer);
+        console.log("LiveView reconnected");
     }
 }
 
