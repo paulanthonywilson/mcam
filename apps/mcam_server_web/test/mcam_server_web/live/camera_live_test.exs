@@ -9,12 +9,44 @@ defmodule McamServerWeb.CameraLiveTest do
   setup %{conn: conn} do
     user = user_fixture()
 
-    camera = user_camera_fixture(user)
+    {:ok, conn: log_in_user(conn, user), user: user}
+  end
 
-    {:ok, camera: camera, conn: log_in_user(conn, user), user: user}
+  describe "index (default route)" do
+    test "when there is a camera", %{user: user, conn: conn} do
+      camera = user_camera_fixture(user)
+      {:ok, _view, html} = live(conn, Routes.camera_path(conn, :index))
+
+      assert html =~ "<h2>" <> camera.name
+    end
+
+    test "when there is no camera", %{conn: conn} do
+      {:ok, _view, html} = live(conn, Routes.camera_path(conn, :index))
+
+      assert html =~ ~r/no camera/i
+    end
+  end
+
+  describe "show" do
+    test "a particular camera", %{user: user, conn: conn} do
+      camera1 = user_camera_fixture(user)
+      camera2 = user_camera_fixture(user)
+
+      {:ok, _view, html} = live(conn, Routes.camera_path(conn, :show, camera1.id))
+      assert html =~ "<h2>" <> camera1.name
+
+      {:ok, _view, html} = live(conn, Routes.camera_path(conn, :show, camera2.id))
+      assert html =~ "<h2>" <> camera2.name
+    end
   end
 
   describe "updating camera name" do
+    setup %{user: user} do
+      camera = user_camera_fixture(user)
+
+      {:ok, camera: camera}
+    end
+
     test "successfully updates and push patches to the return camera id", %{
       camera: %{id: camera_id},
       conn: conn,
