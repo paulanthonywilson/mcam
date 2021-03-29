@@ -30,7 +30,7 @@ defmodule ServerComms.Api do
     else
       err ->
         Logger.info(fn -> "Failed registration: #{inspect(err)}" end)
-        registration_error(err) |> IO.inspect(label: :register_error)
+        registration_error(err)
     end
   end
 
