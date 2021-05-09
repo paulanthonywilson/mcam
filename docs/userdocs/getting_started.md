@@ -49,7 +49,7 @@ Once you're all setup with WiFi you should be able to connect to http://merecam.
 
 Go to https://mcam.iscodebaseonfire.com and register for an account. Once you've confirmed your email you should get a page saying you've no cameras.
 
-Go back to your local camera page at  http://merecam.local:400 (or more specific url). Use your same registration details (username and password) to register your camera to your account.
+Go back to your local camera page at  http://merecam.local:4000 (or more specific url). Use your same registration details (username and password) to register your camera to your account.
 
 Now your camera should appear on https://mcam.iscodebaseonfire.com, and you're done. 😅
 
