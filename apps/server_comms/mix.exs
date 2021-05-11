@@ -35,7 +35,8 @@ defmodule ServerComms.MixProject do
       {:mox, "~> 1.0", only: :test},
       {:camera, in_umbrella: true},
       {:configure, in_umbrella: true},
-      {:common, in_umbrella: true}
+      {:common, in_umbrella: true},
+      {:led_status, in_umbrella: true}
     ]
   end
 

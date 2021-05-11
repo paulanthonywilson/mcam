@@ -5,6 +5,8 @@ defmodule ServerComms.ApiTest do
   alias ServerComms.Api
   alias ServerComms.Api.MockRequest
 
+  setup :verify_on_exit!
+
   describe "registration" do
     test "registration params" do
       MockRequest
@@ -65,6 +67,28 @@ defmodule ServerComms.ApiTest do
       end)
 
       assert {:error, :quota_exceeded} == Api.register("bob@bob.com", "nope", "cam1")
+    end
+  end
+
+  describe "posting unregistered" do
+    test "with ip address" do
+      MockRequest
+      |> expect(:post, 1, fn url, body, headers, _opts ->
+        assert url =~ "api/unregistered_camera"
+
+        assert {:ok, %{"hostname" => "the_camera", "local_ip" => "192.168.0.22"}} ==
+                 Jason.decode(body)
+
+        assert headers == [{"Accept", "application/json"}, {"Content-Type", "application/json"}]
+        %HTTPoison.Response{status_code: 200}
+      end)
+
+      assert :ok == Api.post_unregistered('the_camera', {192, 168, 0, 22})
+    end
+
+    test "with nil ip address does noting" do
+      expect(MockRequest, :post, 0, fn _, _, _, _ -> nil end)
+      assert :ok == Api.post_unregistered('the_camera', nil)
     end
   end
 end

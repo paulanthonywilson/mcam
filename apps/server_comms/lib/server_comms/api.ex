@@ -51,4 +51,38 @@ defmodule ServerComms.Api do
     |> Application.fetch_env!(:server_url)
     |> Path.join("api/register_camera")
   end
+
+  @doc """
+  Post the hostname and local ip to the server to record an unregistered camera.
+  """
+  def post_unregistered() do
+    with {:ok, hostname} <- :inet.gethostname(),
+         local_ip <- LedStatus.wlan0_address() do
+      post_unregistered(hostname, local_ip)
+    end
+  end
+
+  @doc false
+  def post_unregistered(_hostname, nil), do: :ok
+
+  def post_unregistered(hostname, local_ip) do
+    hostname = List.to_string(hostname)
+    local_ip = local_ip |> Tuple.to_list() |> Enum.join(".")
+    request_json = Jason.encode!(%{"hostname" => hostname, "local_ip" => local_ip})
+
+    case @request.post(unregistered_url(), request_json, @json_headers, []) do
+      %{status_code: 200} ->
+        :ok
+
+      err ->
+        Logger.info(fn -> "Failed to post as unregistered: #{inspect(err)}" end)
+        :error
+    end
+  end
+
+  defp unregistered_url do
+    :common
+    |> Application.fetch_env!(:server_url)
+    |> Path.join("api/unregistered_camera")
+  end
 end

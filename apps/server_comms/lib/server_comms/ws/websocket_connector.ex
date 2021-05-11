@@ -6,7 +6,7 @@ defmodule ServerComms.Ws.WebsocketConnector do
 
   use GenServer
 
-  alias ServerComms.Events
+  alias ServerComms.{Api, Events}
   alias ServerComms.Ws.WebsocketHandler
 
   require Logger
@@ -41,6 +41,7 @@ defmodule ServerComms.Ws.WebsocketConnector do
     if Configure.registration_token() do
       start_connecting(@connection_delay, state)
     else
+      Api.post_unregistered()
       {:noreply, state}
     end
   end
@@ -59,6 +60,7 @@ defmodule ServerComms.Ws.WebsocketConnector do
 
       {:error, {status_code, _}} = err when status_code >= 400 and status_code < 500 ->
         Logger.info(fn -> "Failed to connect to the server #{inspect(err)}" end)
+        Api.post_unregistered()
         {:noreply, change_connection_status(state, :invalid_registration)}
 
       # unregister with 400 errors?
