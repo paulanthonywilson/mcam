@@ -80,7 +80,7 @@ defmodule ServerComms.ApiTest do
                  Jason.decode(body)
 
         assert headers == [{"Accept", "application/json"}, {"Content-Type", "application/json"}]
-        %HTTPoison.Response{status_code: 200}
+        {:ok, %HTTPoison.Response{status_code: 200}}
       end)
 
       assert :ok == Api.post_unregistered('the_camera', {192, 168, 0, 22})

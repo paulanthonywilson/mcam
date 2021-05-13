@@ -44,4 +44,15 @@ defmodule McamServerWeb.Camera.CameraRegistrationController do
     |> put_status(400)
     |> json("")
   end
+
+  def unregistered_camera(%{remote_ip: remote_ip} = conn, %{
+        "hostname" => hostname,
+        "local_ip" => local_ip
+      }) do
+    IO.inspect({hostname, local_ip, remote_ip}, label: "unregistered")
+
+    conn
+    |> put_status(200)
+    |> json("")
+  end
 end

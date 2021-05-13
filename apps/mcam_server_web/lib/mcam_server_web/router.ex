@@ -44,6 +44,7 @@ defmodule McamServerWeb.Router do
   scope "/api", McamServerWeb do
     pipe_through :api
     post "/register_camera", Camera.CameraRegistrationController, :create
+    post "/unregistered_camera", Camera.CameraRegistrationController, :unregistered_camera
   end
 
   # Enables LiveDashboard only for development

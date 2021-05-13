@@ -71,12 +71,12 @@ defmodule ServerComms.Api do
     request_json = Jason.encode!(%{"hostname" => hostname, "local_ip" => local_ip})
 
     case @request.post(unregistered_url(), request_json, @json_headers, []) do
-      %{status_code: 200} ->
+      {:ok, %{status_code: 200}} ->
         :ok
 
       err ->
         Logger.info(fn -> "Failed to post as unregistered: #{inspect(err)}" end)
-        :error
+        err
     end
   end
 
