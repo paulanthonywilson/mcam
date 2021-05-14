@@ -11,6 +11,7 @@ defmodule McamServer.UnregisteredCameras do
 
   alias McamServer.UnregisteredCameras.{
     UnregisteredCameraEntry,
+    UnregisteredCameraEvents,
     UnregisteredCameraEntrySupervisor
   }
 
@@ -25,8 +26,12 @@ defmodule McamServer.UnregisteredCameras do
     {:ok, %{registry: registry}}
   end
 
+  def subscribe(server \\ @default_name) do
+    UnregisteredCameraEvents.subscribe(server)
+  end
+
   def record_camera_from_ip(server \\ @default_name, {_ip, _hostname, _local_ip} = details) do
-    GenServer.cast(server, {:record_camera_from_ip, details})
+    GenServer.cast(server, {:record_camera_from_ip, details, server})
   end
 
   def cameras_from_ip(server \\ @default_name, ip) do
@@ -43,7 +48,7 @@ defmodule McamServer.UnregisteredCameras do
   end
 
   def handle_cast(
-        {:record_camera_from_ip, {ip, hostname, local_ip}},
+        {:record_camera_from_ip, {ip, hostname, local_ip}, server},
         %{registry: registry} = state
       ) do
     case Registry.lookup(registry, hostname) do
@@ -51,7 +56,7 @@ defmodule McamServer.UnregisteredCameras do
         update_entry(entry_pid, registry, {ip, hostname, local_ip})
 
       [] ->
-        new_entry(registry, {ip, hostname, local_ip})
+        new_entry({server, registry}, {ip, hostname, local_ip})
     end
 
     {:noreply, state}
@@ -61,13 +66,13 @@ defmodule McamServer.UnregisteredCameras do
     :ok = UnregisteredCameraEntry.update_entry(entry_pid, ip, hostname, local_ip)
   catch
     :exit, _ ->
-      new_entry(registry, entry)
+      new_entry({NoNooooooooooooom, registry}, entry)
   end
 
-  defp new_entry(registry, {ip, hostname, local_ip}) do
+  defp new_entry(identifiers, {ip, hostname, local_ip}) do
     {:ok, _pid} =
       UnregisteredCameraEntrySupervisor.create_new_registry_entry(
-        registry,
+        identifiers,
         ip,
         hostname,
         local_ip

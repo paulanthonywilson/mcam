@@ -13,10 +13,10 @@ defmodule McamServer.UnregisteredCameras.UnregisteredCameraEntrySupervisor do
     DynamicSupervisor.init(strategy: :one_for_one)
   end
 
-  def create_new_registry_entry(registry, ip, hostname, local_ip) do
+  def create_new_registry_entry(identifiers, ip, hostname, local_ip) do
     DynamicSupervisor.start_child(
       @name,
-      {UnregisteredCameraEntry, {registry, ip, hostname, local_ip}}
+      {UnregisteredCameraEntry, {identifiers, ip, hostname, local_ip}}
     )
   end
 end

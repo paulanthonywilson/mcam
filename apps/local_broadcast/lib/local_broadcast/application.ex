@@ -13,7 +13,9 @@ defmodule LocalBroadcast.Application do
       {Registry, keys: :duplicate, name: @peer_broadcaster_name},
       {Registry, keys: :unique, name: @mcam_peer_registry_name},
       {LocalBroadcast.McamPeerRegistry,
-       registry_name: @mcam_peer_registry_name, name: LocalBroadcast.McamPeerRegistry},
+       registry_name: @mcam_peer_registry_name,
+       broadcast_registry_name: @peer_broadcaster_name,
+       name: LocalBroadcast.McamPeerRegistry},
       LocalBroadcast.BroadcasterSupervisor
     ]
 

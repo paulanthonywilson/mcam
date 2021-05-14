@@ -6,7 +6,9 @@ defmodule McamServer.UnregisteredCamerasTest do
   setup do
     registry_name = self() |> inspect() |> String.to_atom()
     {:ok, _pid} = Registry.start_link(keys: :unique, name: registry_name)
+
     {:ok, unregistered_cameras} = UnregisteredCameras.start_link(registry_name: registry_name)
+
     {:ok, unregistered_cameras: unregistered_cameras, registry_name: registry_name}
   end
 
@@ -115,6 +117,80 @@ defmodule McamServer.UnregisteredCamerasTest do
 
     assert [{"nerves-b4lx", "10.20.0.21"}] ==
              UnregisteredCameras.cameras_from_ip(unregistered_cameras, {83, 52, 11, 214})
+  end
+
+  describe "notification" do
+    setup %{unregistered_cameras: unregistered_cameras} do
+      :ok = UnregisteredCameras.subscribe(unregistered_cameras)
+      :ok
+    end
+
+    test "notified on new registration", %{unregistered_cameras: unregistered_cameras} do
+      :ok =
+        UnregisteredCameras.record_camera_from_ip(
+          unregistered_cameras,
+          {{83, 52, 11, 214}, "nerves-b4lx", "10.20.0.21"}
+        )
+
+      assert_receive {^unregistered_cameras, :update,
+                      {{83, 52, 11, 214}, "nerves-b4lx", "10.20.0.21"}}
+    end
+
+    test "notified of updates", %{unregistered_cameras: unregistered_cameras} do
+      :ok =
+        UnregisteredCameras.record_camera_from_ip(
+          unregistered_cameras,
+          {{83, 52, 11, 214}, "nerves-b4lx", "10.20.0.21"}
+        )
+
+      :ok =
+        UnregisteredCameras.record_camera_from_ip(
+          unregistered_cameras,
+          {{83, 52, 11, 214}, "nerves-b4lx", "10.20.0.22"}
+        )
+
+      assert_receive {^unregistered_cameras, :update,
+                      {{83, 52, 11, 214}, "nerves-b4lx", "10.20.0.22"}}
+    end
+
+    test "not notified of updates if no change has been made", %{
+      unregistered_cameras: unregistered_cameras
+    } do
+      :ok =
+        UnregisteredCameras.record_camera_from_ip(
+          unregistered_cameras,
+          {{83, 52, 11, 214}, "nerves-b4lx", "10.20.0.21"}
+        )
+
+      assert_receive {^unregistered_cameras, :update, _}
+
+      :ok =
+        UnregisteredCameras.record_camera_from_ip(
+          unregistered_cameras,
+          {{83, 52, 11, 214}, "nerves-b4lx", "10.20.0.21"}
+        )
+
+      refute_receive {^unregistered_cameras, :update, _}
+    end
+
+    test "notified when removed from registry", %{
+      unregistered_cameras: unregistered_cameras,
+      registry_name: registry_name
+    } do
+      :ok =
+        UnregisteredCameras.record_camera_from_ip(
+          unregistered_cameras,
+          {{83, 52, 11, 214}, "nerves-b4lx", "10.20.0.21"}
+        )
+
+      :sys.get_state(unregistered_cameras)
+
+      [{pid, _}] = Registry.lookup(registry_name, "nerves-b4lx")
+
+      send(pid, :timeout)
+
+      assert_receive {^unregistered_cameras, :removed, "nerves-b4lx"}
+    end
   end
 
   defp wait_until_equals(expected, actual_fn, attempt_count \\ 0)
