@@ -54,4 +54,19 @@ defmodule McamServerWeb.Camera.CameraRegistrationControllerTest do
            |> post(Routes.camera_registration_path(conn, :create), %{})
            |> json_response(400)
   end
+
+  test "recording an unregistered camera", %{conn: conn} do
+    %{remote_ip: remote_ip} = conn
+    McamServer.UnregisteredCameras.subscribe()
+
+    assert conn
+           |> post(Routes.camera_registration_path(conn, :unregistered_camera), %{
+             hostname: "mine-host",
+             local_ip: "192.168.2.3"
+           })
+           |> json_response(200)
+
+    assert_receive {McamServer.UnregisteredCameras, :update,
+                    {^remote_ip, "mine-host", "192.168.2.3"}}
+  end
 end

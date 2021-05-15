@@ -5,7 +5,7 @@ defmodule McamServerWeb.Camera.CameraRegistrationController do
   """
   use McamServerWeb, :controller
 
-  alias McamServer.Cameras
+  alias McamServer.{Cameras, UnregisteredCameras}
 
   require Logger
 
@@ -49,7 +49,7 @@ defmodule McamServerWeb.Camera.CameraRegistrationController do
         "hostname" => hostname,
         "local_ip" => local_ip
       }) do
-    IO.inspect({hostname, local_ip, remote_ip}, label: "unregistered")
+    :ok = UnregisteredCameras.record_camera_from_ip({remote_ip, hostname, local_ip})
 
     conn
     |> put_status(200)

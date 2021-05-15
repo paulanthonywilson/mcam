@@ -3,13 +3,16 @@ defmodule McamServer.UnregisteredCamerasTest do
 
   alias McamServer.UnregisteredCameras
 
+  import Common, only: [wait_until_equals: 2]
+  import McamServer.UnregisteredCamerasSupport
+
   setup do
     registry_name = self() |> inspect() |> String.to_atom()
     {:ok, _pid} = Registry.start_link(keys: :unique, name: registry_name)
 
     {:ok, unregistered_cameras} = UnregisteredCameras.start_link(registry_name: registry_name)
 
-    {:ok, unregistered_cameras: unregistered_cameras, registry_name: registry_name}
+    {:ok, unregistered_cameras: unregistered_cameras}
   end
 
   test "adding and retrieving cameras", %{unregistered_cameras: unregistered_cameras} do
@@ -76,18 +79,14 @@ defmodule McamServer.UnregisteredCamerasTest do
              UnregisteredCameras.cameras_from_ip(unregistered_cameras, {83, 52, 11, 214})
   end
 
-  test "timing out", %{unregistered_cameras: unregistered_cameras, registry_name: registry_name} do
+  test "timing out", %{unregistered_cameras: unregistered_cameras} do
     :ok =
       UnregisteredCameras.record_camera_from_ip(
         unregistered_cameras,
         {{83, 52, 11, 214}, "nerves-b4lx", "10.20.0.21"}
       )
 
-    :sys.get_state(unregistered_cameras)
-
-    [{pid, _}] = Registry.lookup(registry_name, "nerves-b4lx")
-
-    send(pid, :timeout)
+    expire_camera(unregistered_cameras, "nerves-b4lx")
 
     assert [] ==
              wait_until_equals([], fn ->
@@ -96,18 +95,14 @@ defmodule McamServer.UnregisteredCamerasTest do
   end
 
   test "timeout and update race condition",
-       %{unregistered_cameras: unregistered_cameras, registry_name: registry_name} do
+       %{unregistered_cameras: unregistered_cameras} do
     :ok =
       UnregisteredCameras.record_camera_from_ip(
         unregistered_cameras,
         {{83, 52, 11, 214}, "nerves-b4lx", "10.20.0.21"}
       )
 
-    :sys.get_state(unregistered_cameras)
-
-    [{pid, _}] = Registry.lookup(registry_name, "nerves-b4lx")
-
-    send(pid, :timeout)
+    expire_camera(unregistered_cameras, "nerves-b4lx")
 
     :ok =
       UnregisteredCameras.record_camera_from_ip(
@@ -173,37 +168,16 @@ defmodule McamServer.UnregisteredCamerasTest do
       refute_receive {^unregistered_cameras, :update, _}
     end
 
-    test "notified when removed from registry", %{
-      unregistered_cameras: unregistered_cameras,
-      registry_name: registry_name
-    } do
+    test "notified when removed from registry", %{unregistered_cameras: unregistered_cameras} do
       :ok =
         UnregisteredCameras.record_camera_from_ip(
           unregistered_cameras,
           {{83, 52, 11, 214}, "nerves-b4lx", "10.20.0.21"}
         )
 
-      :sys.get_state(unregistered_cameras)
-
-      [{pid, _}] = Registry.lookup(registry_name, "nerves-b4lx")
-
-      send(pid, :timeout)
+      expire_camera(unregistered_cameras, "nerves-b4lx")
 
       assert_receive {^unregistered_cameras, :removed, "nerves-b4lx"}
-    end
-  end
-
-  defp wait_until_equals(expected, actual_fn, attempt_count \\ 0)
-  defp wait_until_equals(_expected, actual_fn, 100), do: actual_fn.()
-
-  defp wait_until_equals(expected, actual_fn, attempt_count) do
-    case actual_fn.() do
-      ^expected ->
-        expected
-
-      _ ->
-        :timer.sleep(1)
-        wait_until_equals(expected, actual_fn, attempt_count + 1)
     end
   end
 end

@@ -34,5 +34,30 @@ defmodule Common do
     end
   end
 
+  @doc """
+  The web port on which the camera / board listens in the local network.
+  """
+  @spec local_web_port :: 4000
   def local_web_port, do: @local_web_port
+
+  @doc """
+  For tests that have some asynchronous parts. Wait until the funtion evaluates to the expected,
+  sleeping for a millisecond between each waits. Attempts the funtion 100 times (by default).
+
+  Returns the result of the last call to the function.
+  """
+  @spec wait_until_equals(any, (() -> any), any) :: any
+  def wait_until_equals(expected, actual_fn, attempt_count \\ 100)
+  def wait_until_equals(_expected, actual_fn, 0), do: actual_fn.()
+
+  def wait_until_equals(expected, actual_fn, attempt_count) do
+    case actual_fn.() do
+      ^expected ->
+        expected
+
+      _ ->
+        :timer.sleep(1)
+        wait_until_equals(expected, actual_fn, attempt_count - 1)
+    end
+  end
 end

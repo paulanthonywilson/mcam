@@ -42,7 +42,8 @@ defmodule McamServer.MixProject do
       {:ecto_sql, "~> 3.4"},
       {:postgrex, ">= 0.0.0"},
       {:plug_crypto, "~> 1.2"},
-      {:jason, "~> 1.0"}
+      {:jason, "~> 1.0"},
+      {:common, in_umbrella: true}
     ]
   end
 
