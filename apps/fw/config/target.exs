@@ -74,6 +74,21 @@ config :mdns_lite,
   # Advertise the following services over mDNS.
   services: [
     %{
+      protocol: "ssh",
+      transport: "tcp",
+      port: 22
+    },
+    %{
+      protocol: "sftp-ssh",
+      transport: "tcp",
+      port: 22
+    },
+    %{
+      protocol: "epmd",
+      transport: "tcp",
+      port: 4369
+    },
+    %{
       name: "Mere-cam local web",
       protocol: "http",
       transport: "tcp",

@@ -53,7 +53,7 @@ defmodule LocalBroadcast.Broadcaster do
       add_membership: {@ip, @local_interface},
       multicast_if: @local_interface,
       multicast_loop: true,
-      multicast_ttl: 1,
+      multicast_ttl: 10,
       reuseaddr: true
     ]
 
