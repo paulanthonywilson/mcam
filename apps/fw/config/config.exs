@@ -10,6 +10,13 @@ Application.start(:nerves_bootstrap)
 
 config :fw, target: Mix.target()
 
+config :nerves_time, :servers, [
+  "0.pool.ntp.org",
+  "1.pool.ntp.org",
+  "2.pool.ntp.org",
+  "3.pool.ntp.org"
+]
+
 # Customize non-Elixir parts of the firmware. See
 # https://hexdocs.pm/nerves/advanced-configuration.html for details.
 
