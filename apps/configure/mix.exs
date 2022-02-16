@@ -36,7 +36,10 @@ defmodule Configure.MixProject do
 
   defp deps(_) do
     [
-      {:vintage_net_wizard, "~> 0.4.0"}
+      # Fixed VintageNetWizard
+      {:vintage_net_wizard,
+       git: "git@github.com:paulanthonywilson/vintage_net_wizard.git",
+       branch: "fix-configuration-amnesia-on-shutdown"}
     ]
   end
 

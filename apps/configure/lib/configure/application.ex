@@ -13,21 +13,10 @@ defmodule Configure.Application do
       {Phoenix.PubSub, name: Configure.Events.pubsub_name()}
     ]
 
-    if should_start_home_hotspot?() do
-      OwnHotspot.start()
-    end
+    OwnHotspot.start_if_unconfigured()
 
     opts = [strategy: :one_for_one, name: Configure.Supervisor]
     Supervisor.start_link(children, opts)
-  end
-
-  def should_start_home_hotspot? do
-    with true <- function_exported?(VintageNet.Persistence, :call, 2),
-         {:error, _} <- apply(VintageNet.Persistence, :call, [:load, ["wlan0"]]) do
-      true
-    else
-      _ -> false
-    end
   end
 
   @filename (case(Mix.target()) do
