@@ -79,9 +79,8 @@ defmodule LocalBroadcast.Broadcaster do
   end
 
   def handle_info({:udp, _, source_ip, _port, "mcam:" <> host}, state) do
-    Tick.tick(:local_broadcast_peers_tick)
-
     if host != Common.hostname() do
+      Tick.tick(:local_broadcast_peers_tick)
       McamPeerRegistry.record_peer(McamPeerRegistry, host, source_ip)
     end
 
