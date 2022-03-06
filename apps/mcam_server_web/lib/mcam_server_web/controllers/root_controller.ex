@@ -8,4 +8,8 @@ defmodule McamServerWeb.RootController do
       redirect(conn, to: Routes.page_path(conn, :index))
     end
   end
+
+  def ok(conn, _) do
+    text(conn, "ok")
+  end
 end

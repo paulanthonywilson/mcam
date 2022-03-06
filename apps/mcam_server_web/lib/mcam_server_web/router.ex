@@ -39,6 +39,8 @@ defmodule McamServerWeb.Router do
 
     get("/", RootController, :index)
     live("/landing", PageLive, :index)
+
+    get("/ok", RootController, :ok)
   end
 
   scope "/api", McamServerWeb do
