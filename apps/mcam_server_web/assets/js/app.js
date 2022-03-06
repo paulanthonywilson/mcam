@@ -26,17 +26,44 @@ Hooks.ImageHook = {
         let imageSocket = new ImageSocket(this.el);
         imageSocket.connect();
         this.socket = imageSocket;
+        this.reloadPageTimer = null;
     },
     disconnected() {
-        // this.reloadPageTimer = setInterval(function () {
-        //     console.log("reloading");
-        //     window.location.reload();
-        // }, 3 * 60 * 1000);
+        this.scheduleReload();
         console.log("LiveView disconnected");
     },
     reconnected() {
+        if (null == this.reloadPageTimer) {
+            clearInterval(this.reloadPageTimer);
+            this.reloadPageTimer = null;
+        }
         console.log("LiveView reconnected");
+    },
+
+
+
+
+    scheduleReload() {
+        let that = this;
+        this.reloadPageTimer = setInterval(function () {
+            that.maybeReload();
+        }, 30 * 1000);
+    },
+
+    maybeReload() {
+        let that = this;
+        let xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+            window.location.reload();
+        };
+        xhr.onerror = function () {
+            that.scheduleReload();
+        };
+
+        xhr.open("GET", "/ok");
+        xhr.send();
     }
+
 }
 
 
